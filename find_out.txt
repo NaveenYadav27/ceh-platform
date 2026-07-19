@@ -1,0 +1,2 @@
+479: <div id="mock-terminal-feed" style="line-height:1.6;"></div>
+10589: btn.innerHTML = '🔽 <span>Close Terminals</span>';

@@ -1,0 +1,3 @@
+function buildCommandsHTML(d){
+  const tools=d.tools||[];
+  const cmds=d.commands||{win:[],lin:[]}

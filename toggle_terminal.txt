@@ -1,0 +1,12 @@
+function toggleTerminal(){
+  termOpen = !termOpen;
+  const drawer = document.getElementById('term-drawer');
+  const btn = document.getElementById('term-toggle-btn');
+  if(termOpen){
+    drawer.classList.add('open');
+    btn.innerHTML = '🔽 <span>Close Terminals</span>';
+  } else {
+    drawer.classList.remove('open');
+    btn.innerHTML = '⌨️ <span>Open Terminals</span>';
+  }
+}

@@ -1,0 +1,20 @@
+<nav id="sidebar">
+      <div class="sidebar-search-wrap">
+        <input class="sidebar-search" id="sidebar-search" placeholder="> search modules..." oninput="filterModules(this.value)"/>
+      </div>
+      <div class="sidebar-nav" id="sidebar-nav"></div>
+      <div class="sidebar-footer">
+        <div class="progress-ring-wrap">
+          <svg class="progress-ring-svg" viewBox="0 0 48 48">
+            <circle class="progress-ring-bg" cx="24" cy="24" r="20"/>
+            <circle class="progress-ring-fill" id="progress-ring" cx="24" cy="24" r="20"
+              stroke-dasharray="125.66" stroke-dashoffset="125.66"/>
+          </svg>
+          <div class="progress-info">
+            <div class="progress-pct" id="progress-pct">0%</div>
+            <div class="progress-label">MODULES COMPLETE</div>
+            <div class="progress-label" style="color:var(--green);margin-top:2px;"><span id="topics-done">0</span> / <span id="topics-total">0</span> topics</div>
+          </div>
+        </div>
+      </div>
+    </nav>

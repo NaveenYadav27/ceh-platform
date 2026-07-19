@@ -1,0 +1,262 @@
+<body>
+
+<div id="landing-page">
+  <div class="cyber-grid" style="position:absolute;inset:0;"></div>
+  
+  <div class="nav-bar">
+    <div class="nav-inner glass-panel">
+      <div style="color:var(--cyber-cyan);font-weight:700;font-size:1.4rem;letter-spacing:1px;display:flex;align-items:center;gap:10px;">
+        <span style="color:var(--cyber-red);">GFS</span> CYBER DEFENSE
+      </div>
+      <div class="nav-links">
+        <span class="nav-link">Cyber Range</span>
+        <span class="nav-link">Modules</span>
+        <span class="nav-link">Labs</span>
+        <span class="nav-link">AI Ops</span>
+        <span class="nav-link">SOC</span>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <button class="btn-cyber btn-cyber-ghost" onclick="showLogin()">Login</button>
+        <button class="btn-cyber" onclick="showLogin()">Enroll</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-section">
+    <div class="hero-grid">
+      <!-- LEFT -->
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid rgba(0,229,255,0.4);background:rgba(0,229,255,0.1);border-radius:20px;margin-bottom:24px;">
+          <span class="pulse-glow" style="width:6px;height:6px;background:var(--cyber-red);border-radius:50%;"></span>
+          <span style="font-family:var(--mono);font-size:0.65rem;color:var(--cyber-cyan);letter-spacing:3px;">CLASSIFIED // OPERATIONAL</span>
+        </div>
+        <h1 style="font-size:4rem;line-height:1;font-weight:900;margin-bottom:24px;letter-spacing:-1px;">
+          GLOBAL FINANCIAL<br/>
+          <span class="neon-text-cyan">SERVICES</span><br/>
+          CYBER <span class="neon-text-red">DEFENSE</span>
+        </h1>
+        <p style="color:var(--text-dim);font-size:1.1rem;line-height:1.6;margin-bottom:32px;max-width:500px;">
+          Welcome to your first day at Global Financial Services. Step into the shoes of a cybersecurity analyst, navigate real-world financial sector threats, and defend the firm\'s critical infrastructure in this live corporate simulation.
+        </p>
+        <div style="display:flex;gap:16px;margin-bottom:40px;">
+          <button class="btn-cyber" onclick="showLogin()">Start Shift</button>
+          <button class="btn-cyber btn-cyber-red" onclick="showLogin()">View Assignments</button>
+        </div>
+        <div style="display:flex;gap:24px;">
+          <div class="corner-frame"><div class="neon-text-cyan" style="font-size:1.8rem;font-weight:700;">1,250+</div><div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Active Analysts</div></div>
+          <div class="corner-frame"><div class="neon-text-cyan" style="font-size:1.8rem;font-weight:700;">24+</div><div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Active Incidents</div></div>
+          <div class="corner-frame"><div class="neon-text-cyan" style="font-size:1.8rem;font-weight:700;">100%</div><div style="font-family:var(--mono);font-size:0.6rem;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;">Threat Mitigation</div></div>
+        </div>
+      </div>
+      
+      <!-- RIGHT -->
+      <div style="position:relative;">
+        <div class="glass-panel scan-line" style="border-radius:12px;padding:20px;position:relative;overflow:hidden;">
+          <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,229,255,0.2);padding-bottom:12px;margin-bottom:16px;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span style="width:10px;height:10px;background:var(--cyber-red);border-radius:50%;"></span>
+              <span style="width:10px;height:10px;background:var(--cyber-ember);border-radius:50%;"></span>
+              <span style="width:10px;height:10px;background:var(--cyber-cyan);border-radius:50%;"></span>
+              <span style="font-family:var(--mono);font-size:0.6rem;color:var(--text-muted);letter-spacing:2px;margin-left:12px;">gfs://soc/terminal-session-0xA31F</span>
+            </div>
+            <span class="pulse-glow" style="color:var(--cyber-cyan);font-family:var(--mono);font-size:0.6rem;">● REC</span>
+          </div>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <!-- Terminal -->
+            <div style="grid-column:1/-1;background:rgba(0,0,0,0.6);border:1px solid rgba(0,229,255,0.2);border-radius:8px;padding:12px;min-height:220px;font-family:var(--mono);font-size:0.75rem;">
+              <div style="color:var(--cyber-cyan);margin-bottom:8px;font-size:0.65rem;">> ANALYST@GFS-SOC — LIVE SESSION</div>
+              <div id="mock-terminal-feed" style="line-height:1.6;"></div>
+              <div style="color:var(--cyber-cyan);">$ <span class="pulse-glow">▌</span></div>
+            </div>
+            
+            <!-- Alerts -->
+            <div style="background:rgba(30,30,47,0.6);border:1px solid rgba(0,229,255,0.2);border-radius:8px;padding:12px;">
+              <div style="color:var(--cyber-cyan);font-family:var(--mono);font-size:0.65rem;margin-bottom:12px;display:flex;justify-content:space-between;"><span>SIEM ALERTS</span><span style="color:var(--cyber-red);">16 CRIT</span></div>
+              <div id="siem-alerts-feed" style="display:flex;flex-direction:column;gap:8px;"></div>
+            </div>
+            
+            <!-- AI SOC -->
+            <div style="background:rgba(30,30,47,0.6);border:1px solid rgba(255,59,48,0.3);border-radius:8px;padding:12px;">
+              <div style="color:var(--cyber-red);font-family:var(--mono);font-size:0.65rem;margin-bottom:12px;">AI SOC</div>
+              <div style="margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;"><span>Threat Score</span><span style="color:var(--cyber-red);">95%</span></div>
+                <div style="height:4px;background:rgba(0,0,0,0.5);border-radius:4px;overflow:hidden;"><div style="height:100%;width:95%;background:var(--cyber-red);box-shadow:0 0 8px var(--cyber-red);"></div></div>
+              </div>
+              <div style="margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.55rem;color:var(--text-muted);margin-bottom:4px;"><span>Detection</span><span style="color:var(--cyber-cyan);">87%</span></div>
+                <div style="height:4px;background:rgba(0,0,0,0.5);border-radius:4px;overflow:hidden;"><div style="height:100%;width:87%;background:var(--cyber-cyan);box-shadow:0 0 8px var(--cyber-cyan);"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<canvas id="particles"></canvas>
+
+<!-- LOGIN OVERLAY -->
+<div id="ceh-login-overlay">
+  <div class="login-card">
+    <div class="login-logo">💀</div>
+    <div class="login-title">SHADOWXLAB GFS SOC</div>
+    <div class="login-tagline">Mission Briefing Required.<br/>Authenticate to Proceed.</div>
+    <label class="login-label" for="login-email">// OPERATOR ID</label>
+    <input class="login-input" type="email" id="login-email" placeholder="operator@shadowxlab.com" autocomplete="email"/>
+    <label class="login-label" for="login-pass">// ACCESS KEY</label>
+    <input class="login-input" type="password" id="login-pass" placeholder="••••••••••••" autocomplete="current-password"/>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">AUTHENTICATE →</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- XP TOAST -->
+<div class="xp-toast" id="xp-toast"></div>
+
+<!-- MAIN APP -->
+<div id="ceh-app" style="display:none;">
+
+  
+  <!-- FLOATING TERMINALS -->
+  <div class="term-drawer" id="term-drawer">
+    <div class="term-panel">
+      <div class="term-header">
+        <span><span style="color:#00BFFF">❖</span> Windows PowerShell</span>
+        <span style="cursor:pointer" onclick="document.getElementById('term-body-win').innerHTML=''">🗑️</span>
+      </div>
+      <div class="term-body term-win" id="term-body-win">
+        <div>Windows PowerShell</div><div>Copyright (C) Microsoft Corporation. All rights reserved.</div><br/>
+      </div>
+      <div class="term-input-line">
+        <span style="color:#64748B">PS C:\Users\Operator&gt;</span>
+        <input class="term-input term-win" id="term-input-win" autocomplete="off" spellcheck="false"/>
+      </div>
+    </div>
+    <div class="term-panel">
+      <div class="term-header">
+        <span><span style="color:var(--green)">🐧</span> Kali Linux Shell</span>
+        <span style="cursor:pointer" onclick="document.getElementById('term-body-lin').innerHTML=''">🗑️</span>
+      </div>
+      <div class="term-body term-lin" id="term-body-lin">
+        <div>Linux shadowxlab 6.1.0-kali-amd64</div><div>Welcome to the ShadowXLab Offensive Security Shell.</div><br/>
+      </div>
+      <div class="term-input-line">
+        <span style="color:#64748B">root@shadowxlab:~#</span>
+        <input class="term-input term-lin" id="term-input-lin" autocomplete="off" spellcheck="false"/>
+      </div>
+    </div>
+  </div>
+  <button class="term-toggle-btn" id="term-toggle-btn" onclick="toggleTerminal()">
+    ⌨️ <span>Open Terminals</span>
+  </button>
+
+  <!-- TOPBAR -->
+  <header id="topbar">
+    <div class="topbar-logo"><span>💀</span>GFS SOC</div>
+    <div class="threat-ticker-wrap">
+      <div class="threat-ticker">
+        <div class="threat-dot"></div>
+        &nbsp;LIVE THREAT FEED:&nbsp;
+        CVE-2024-6387 Critical RCE in OpenSSH (regreSSHion) &nbsp;|&nbsp;
+        CVE-2024-3400 SQLi in PAN-OS GlobalProtect &nbsp;|&nbsp;
+        CVE-2024-21762 Auth Bypass in Fortinet FortiOS &nbsp;|&nbsp;
+        CVE-2024-1708 LPE in ConnectWise ScreenConnect &nbsp;|&nbsp;
+        CVE-2024-27198 Bypass in JetBrains TeamCity &nbsp;|&nbsp;
+        CVE-2024-4040 RCE in CrushFTP via VFS &nbsp;|&nbsp;
+        MITRE ATT&CK T1190: Exploit Public-Facing Application &nbsp;|&nbsp;
+        APT29 Cozy Bear targets EU diplomatic networks &nbsp;|&nbsp;
+        RANSOMWARE: LockBit 4.0 new variant spotted in wild
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="xp-badge">⚡ <span id="xp-count">0</span> XP</div>
+      <div class="rank-badge" id="rank-badge">🐣 Script Kiddie</div>
+      <div class="user-email" id="user-email-display"></div>
+      <button id="btn-admin-nav" class="btn-cyber btn-cyber-ghost" style="display:none;padding:6px 12px;font-size:0.65rem;" onclick="showAdminPanel()">ADMIN</button>
+        <button class="logout-btn" onclick="doLogout()">LOGOUT</button>
+    </div>
+  </header>
+
+  <div id="layout">
+
+    <!-- SIDEBAR -->
+    <nav id="sidebar">
+      <div class="sidebar-search-wrap">
+        <input class="sidebar-search" id="sidebar-search" placeholder="> search modules..." oninput="filterModules(this.value)"/>
+      </div>
+      <div class="sidebar-nav" id="sidebar-nav"></div>
+      <div class="sidebar-footer">
+        <div class="progress-ring-wrap">
+          <svg class="progress-ring-svg" viewBox="0 0 48 48">
+            <circle class="progress-ring-bg" cx="24" cy="24" r="20"/>
+            <circle class="progress-ring-fill" id="progress-ring" cx="24" cy="24" r="20"
+              stroke-dasharray="125.66" stroke-dashoffset="125.66"/>
+          </svg>
+          <div class="progress-info">
+            <div class="progress-pct" id="progress-pct">0%</div>
+            <div class="progress-label">MODULES COMPLETE</div>
+            <div class="progress-label" style="color:var(--green);margin-top:2px;"><span id="topics-done">0</span> / <span id="topics-total">0</span> topics</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- CONTENT AREA -->
+    <main id="content-area">
+      
+      
+      <!-- ADMIN DASHBOARD -->
+      <div class="lms-dash" id="admin-panel" style="display:none;">
+        <div class="lms-hero" style="background:linear-gradient(135deg, rgba(255,59,92,0.1), rgba(0,0,0,0));border-color:rgba(255,59,92,0.3);">
+          <div class="lms-hero-left">
+            <div style="color:var(--red);font-family:var(--mono);font-size:0.75rem;margin-bottom:8px;letter-spacing:2px;">shadowx://admin/console</div>
+            <h1 style="color:#fff;">Admin Console</h1>
+            <p>Cohort telemetry and access control panel.</p>
+          </div>
+          <div class="lms-stats">
+            <div class="lms-stat"><div class="lms-stat-val" id="admin-tot-ops">0</div><div class="lms-stat-lbl">Operators</div></div>
+            <div class="lms-stat"><div class="lms-stat-val" id="admin-tot-xp" style="color:var(--cyan)">0</div><div class="lms-stat-lbl">Total XP Mined</div></div>
+          </div>
+        </div>
+        
+        <h2 style="font-family:var(--font);font-size:1.5rem;margin-bottom:16px;">Operators Database</h2>
+        <div class="glass-panel" style="border-radius:12px;overflow:hidden;">
+          <table style="width:100%;text-align:left;border-collapse:collapse;font-size:0.85rem;">
+            <thead style="background:rgba(0,255,136,0.1);font-family:var(--mono);font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">
+              <tr><th style="padding:16px;">Operator</th><th style="padding:16px;">Role</th><th style="padding:16px;">XP</th><th style="padding:16px;">Topics</th><th style="padding:16px;">Joined</th></tr>
+            </thead>
+            <tbody id="admin-users-list">
+              <!-- Users populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="lms-dash" id="welcome-screen">
+        <div class="lms-hero">
+          <div class="lms-hero-left">
+            <h1>GLOBAL FINANCIAL SERVICES</h1>
+            <p>Welcome to your first day at Global Financial Services. Track your active incidents, execute defensive operations, and master your role as a Cybersecurity Analyst.</p>
+          </div>
+          <div class="lms-stats">
+            <div class="lms-stat"><div class="lms-stat-val" id="dash-xp">0</div><div class="lms-stat-lbl">Total XP</div></div>
+            <div class="lms-stat"><div class="lms-stat-val" id="dash-rank">Script Kiddie</div><div class="lms-stat-lbl">Rank</div></div>
+          </div>
+        </div>
+        <div class="lms-modules-grid" id="lms-modules-grid"></div>
+      </div>
+
+          
+      <div id="topic-view" style="display:none;"></div>
+    </main>
+
+      <!-- Empty Notification Panel Component -->
+
+      <!-- Empty Footer Component -->
+
+    </div>
+  </div>
+

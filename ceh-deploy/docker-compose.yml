@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ceh_db
+    environment:
+      POSTGRES_USER: cehadmin
+      POSTGRES_PASSWORD: cehpassword123
+      POSTGRES_DB: cehdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - cehpgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    container_name: ceh_backend
+    ports:
+      - "3001:3000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=cehadmin
+      - DB_PASSWORD=cehpassword123
+      - DB_NAME=cehdb
+      - JWT_SECRET=ShadowXLabCEHSuperSecretKey2026
+    depends_on:
+      - db
+    volumes:
+      - ./frontend:/usr/src/app/public
+
+volumes:
+  cehpgdata:
