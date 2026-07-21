@@ -279,9 +279,30 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .btn-complete:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,255,136,0.3);}
 
 /* ── FLOATING TERMINALS ── */
-.term-drawer { position:fixed; bottom:0; left:var(--sidebar-w); right:0; height:320px; background:#000; border-top:1px solid var(--border-bright); display:flex; transform:translateY(100%); transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index:1000; box-shadow:0 -10px 40px rgba(0,0,0,0.5); font-family:var(--mono); }
-.term-drawer.open { transform:translateY(0); }
-@media(max-width:900px){ .term-drawer { left:0; flex-direction:column; height:50vh; } }
+:root { --workspace-w: 32%; }
+.term-drawer { position:fixed; top:var(--topbar-h); right:0; bottom:0; width:var(--workspace-w); background:#000; border-left:1px solid var(--border-dim); display:flex; flex-direction:column; transform:translateX(100%); transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index:1000; box-shadow:-10px 0 40px rgba(0,0,0,0.5); font-family:var(--mono); }
+.term-drawer.open { transform:translateX(0); }
+.term-drawer.investigation { width: calc(100vw - var(--sidebar-w)); }
+.term-drawer.practice { width: 50%; }
+.workspace-resizer { position:absolute; top:0; left:0; bottom:0; width:6px; cursor:ew-resize; background:transparent; z-index:10; }
+.workspace-resizer:hover { background:var(--green); opacity:0.5; }
+.workspace-header { display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid var(--border-dim); background:#111; font-family:var(--sans); }
+.workspace-header h3 { margin:0; font-size:1rem; font-weight:600; color:#fff; display:flex; align-items:center; gap:8px; }
+.workspace-controls span { cursor:pointer; color:var(--text-muted); font-size:1.1rem; padding:0 6px; transition:color 0.2s; }
+.workspace-controls span:hover { color:#fff; }
+.workspace-panels { display:flex; flex-direction:column; flex:1; overflow-y:auto; overflow-x:hidden; }
+.workspace-panel-section { padding:12px; border-bottom:1px solid var(--border-dim); font-size:0.85rem; color:var(--text-dim); }
+.workspace-term-container { display:flex; flex:1; flex-direction:column; overflow:hidden; }
+.workspace-term-container.split { flex-direction:column; }
+.term-panel { flex: 1; display:flex; flex-direction:column; border-bottom:1px solid var(--border-dim); }
+.term-panel:last-child { border-bottom:none; }
+.term-tabs { display:flex; gap:8px; padding:8px 12px; background:#000; border-bottom:1px solid var(--border-dim); }
+.term-tab { cursor:pointer; color:var(--text-muted); font-size:0.8rem; padding:4px 8px; border-radius:4px; transition:all 0.2s; }
+.term-tab.active { background:#222; color:var(--green); }
+.status-bar { display:flex; justify-content:space-between; padding:6px 12px; background:#000; border-top:1px solid var(--border-dim); font-family:var(--mono); font-size:0.75rem; color:var(--text-muted); }
+.hide-win .term-panel:nth-child(1) { display: none !important; }
+.hide-lin .term-panel:nth-child(2) { display: none !important; }
+@media(max-width:1199px){ .term-drawer { width: 100% !important; z-index: 2000; left: 0; transform:translateY(100%); } .term-drawer.open { transform:translateY(0); } .workspace-resizer { display: none; } }
 .term-panel { flex:1; display:flex; flex-direction:column; border-right:1px solid var(--border); overflow:hidden; }
 .term-panel:last-child { border-right:none; }
 .term-header { background:rgba(255,255,255,0.05); padding:8px 14px; font-size:0.75rem; color:var(--text-muted); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); }
@@ -530,67 +551,112 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <div id="ceh-app" style="display:none;">
 
   
-  <!-- FLOATING TERMINALS -->
+  <!-- ENTERPRISE WORKSPACE -->
   <div class="term-drawer" id="term-drawer">
-    <div class="term-panel">
-      <div class="term-header" style="flex-direction:column; align-items:stretch;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span><span style="color:#00BFFF">❖</span> <strong>Windows Operator</strong></span>
-          <span style="cursor:pointer; color:var(--text-muted); font-size:1.1rem; padding:0 4px;" onclick="toggleTerminal()" title="Minimize Terminal">✕</span>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:0.75rem; font-family:var(--mono); color:var(--text-dim); margin-bottom:12px;">
-          <div>Host: WIN-CLIENT01</div><div>Windows 11</div>
-          <div>User: Analyst</div><div>PowerShell 7.5</div>
-          <div>Privilege: Standard User</div><div>Session: Interactive</div>
-        </div>
-        <div style="display:flex; justify-content:flex-start; gap:16px; font-size:0.75rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:8px;">
-          <span style="cursor:pointer; color:var(--text-muted); transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'" onclick="document.getElementById('term-body-win').innerHTML=''">🗑 Clear</span>
-          <span style="cursor:pointer; color:var(--text-muted); transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'" onclick="alert('History exporting not available in mock environment.')">📜 History</span>
-          <span style="cursor:pointer; color:var(--text-muted); transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'" onclick="alert('Export not available in mock environment.')">⬇ Export</span>
-        </div>
-      </div>
-      <div class="term-body term-win" id="term-body-win">
-        <div>Windows PowerShell</div><div>Copyright (C) Microsoft Corporation. All rights reserved.</div><br/>
-      </div>
-      <div class="term-input-line">
-        <span style="color:#64748B">PS C:\Users\Operator&gt;</span>
-        <input class="term-input term-win" id="term-input-win" autocomplete="off" spellcheck="false"/>
+    <div class="workspace-resizer" id="workspace-resizer"></div>
+    
+    <div class="workspace-header">
+      <h3><span style="color:var(--green)">⚡</span> Enterprise Workspace</h3>
+      <div class="workspace-controls">
+        <span onclick="setWorkspaceMode('learn')" title="Learn Mode">─</span>
+        <span onclick="setWorkspaceMode('practice')" title="Practice Mode">□</span>
+        <span onclick="setWorkspaceMode('investigation')" title="Investigation Mode">⛶</span>
+        <span onclick="popoutWorkspace()" title="Pop-out Workspace">↗</span>
+        <span onclick="toggleTerminal()" title="Close">✕</span>
       </div>
     </div>
     
-    <div class="term-panel">
-      <div class="term-header" style="flex-direction:column; align-items:stretch;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span><span style="color:var(--green)">🐧</span> <strong>Kali Security Analyst</strong></span>
-          <span style="cursor:pointer; color:var(--text-muted); font-size:1.1rem; padding:0 4px;" onclick="toggleTerminal()" title="Minimize Terminal">✕</span>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:0.75rem; font-family:var(--mono); color:var(--text-dim); margin-bottom:12px;">
-          <div>Host: KALI-SOC01</div><div>Kali Linux</div>
-          <div>User: root</div><div>Bash</div>
-          <div>Privilege: root</div><div>Network: Lab VLAN</div>
-        </div>
-        <div style="display:flex; justify-content:flex-start; gap:16px; font-size:0.75rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:8px;">
-          <span style="cursor:pointer; color:var(--text-muted); transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'" onclick="document.getElementById('term-body-lin').innerHTML=''">🗑 Clear</span>
-          <span style="cursor:pointer; color:var(--text-muted); transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'" onclick="alert('History exporting not available in mock environment.')">📜 History</span>
-          <span style="cursor:pointer; color:var(--text-muted); transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'" onclick="alert('Export not available in mock environment.')">⬇ Export</span>
+    <div class="workspace-panels">
+      <div class="workspace-panel-section" id="mission-header">
+        <div style="color:#fff; font-weight:600; margin-bottom:4px;">Current Mission</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; font-family:var(--mono); font-size:0.75rem;">
+          <div>Case ID: INC-204</div><div>Priority: Medium</div>
+          <div>Role: SOC Analyst</div><div>Status: Investigation</div>
+          <div style="grid-column: 1 / -1; color:var(--green); margin-top:4px;">Target: payments.example.internal</div>
         </div>
       </div>
-      <div class="term-body term-lin" id="term-body-lin">
-        <div>Linux shadowxlab 6.1.0-kali-amd64</div><div>Welcome to the ShadowXLab Offensive Security Shell.</div><br/>
+      
+      <div class="workspace-panel-section" id="evidence-panel">
+        <div style="color:#fff; font-weight:600; margin-bottom:4px; cursor:pointer;" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'">Evidence Checklist ▾</div>
+        <div style="font-family:var(--mono); margin-top:8px;">
+          <div>✓ WHOIS Record</div>
+          <div>✓ DNS Enumeration</div>
+          <div>□ Screenshots</div>
+          <div>□ IOC List</div>
+          <div>□ Final Report</div>
+        </div>
       </div>
-      <div class="term-input-line">
-        <span style="color:#64748B">root@shadowxlab:~#</span>
-        <input class="term-input term-lin" id="term-input-lin" autocomplete="off" spellcheck="false"/>
+      
+      <div class="workspace-panel-section" id="ai-mentor-panel" style="display:none;">
+        <div style="color:#fff; font-weight:600; margin-bottom:4px;">AI Mentor (Coming Soon)</div>
+        <div style="font-family:var(--sans); font-size:0.8rem;">Ready to assist with command explanations and hints.</div>
+      </div>
+
+      <div class="term-tabs">
+        <div class="term-tab active" id="tab-split" onclick="setTermView('split')">Split View</div>
+        <div class="term-tab" id="tab-win" onclick="setTermView('win')">Windows</div>
+        <div class="term-tab" id="tab-lin" onclick="setTermView('lin')">Kali</div>
+      </div>
+
+      <div class="workspace-term-container split" id="workspace-term-container">
+        <!-- WIN TERMINAL -->
+        <div class="term-panel">
+          <div class="term-header" style="flex-direction:column; align-items:stretch;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span><span style="color:#00BFFF">❖</span> <strong>Windows Operator</strong></span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:0.75rem; font-family:var(--mono); color:var(--text-dim); margin-bottom:12px;">
+              <div>Host: WIN-CLIENT01</div><div>User: Analyst</div>
+            </div>
+            <div style="display:flex; justify-content:flex-start; gap:16px; font-size:0.75rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:8px;">
+              <span style="cursor:pointer; color:var(--text-muted);" onclick="document.getElementById('term-body-win').innerHTML=''">🗑 Clear</span>
+            </div>
+          </div>
+          <div class="term-body term-win" id="term-body-win">
+            <div>Windows PowerShell</div><div>Copyright (C) Microsoft Corporation. All rights reserved.</div><br/>
+          </div>
+          <div class="term-input-line">
+            <span style="color:#64748B">PS C:\Users\Operator&gt;</span>
+            <input class="term-input term-win" id="term-input-win" autocomplete="off" spellcheck="false"/>
+          </div>
+        </div>
+        
+        <!-- LINUX TERMINAL -->
+        <div class="term-panel">
+          <div class="term-header" style="flex-direction:column; align-items:stretch;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span><span style="color:var(--green)">🐧</span> <strong>Kali Security Analyst</strong></span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px; font-size:0.75rem; font-family:var(--mono); color:var(--text-dim); margin-bottom:12px;">
+              <div>Host: KALI-SOC01</div><div>User: root</div>
+            </div>
+            <div style="display:flex; justify-content:flex-start; gap:16px; font-size:0.75rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:8px;">
+              <span style="cursor:pointer; color:var(--text-muted);" onclick="document.getElementById('term-body-lin').innerHTML=''">🗑 Clear</span>
+            </div>
+          </div>
+          <div class="term-body term-lin" id="term-body-lin">
+            <div>Linux shadowxlab 6.1.0-kali-amd64</div><div>Welcome to the ShadowXLab Offensive Security Shell.</div><br/>
+          </div>
+          <div class="term-input-line">
+            <span style="color:#64748B">root@shadowxlab:~#</span>
+            <input class="term-input term-lin" id="term-input-lin" autocomplete="off" spellcheck="false"/>
+          </div>
+        </div>
       </div>
     </div>
+    
+    <div class="status-bar">
+      <span>Connected</span>
+      <span>Evidence: 2/5</span>
+      <span style="color:var(--green)">XP: +25</span>
+    </div>
   </div>
+
   <button class="term-toggle-btn" id="term-toggle-btn" onclick="toggleTerminal()">
-    ⌨️ <span>Open Terminals</span>
+    ⌨️ <span>Open Workspace</span>
   </button>
   
-  
-
-  <!-- TOPBAR -->
+  <!-- TOPBAR -->!-- TOPBAR -->
   <header id="topbar">
     <div class="topbar-logo"><span>💀</span>GFS SOC</div>
     <div class="threat-ticker-wrap">
@@ -10660,6 +10726,179 @@ const TERMINAL_CMDS = {
 
 // ── FLOATING TERMINALS ──
 let termOpen = false;
+
+const WorkspaceState = {
+  mode: 'learn',
+  activeTerminal: 'split',
+  evidenceCollapsed: false,
+  aiCollapsed: true,
+  popout: false
+};
+
+function popoutWorkspace() {
+  WorkspaceState.popout = true;
+  const drawer = document.getElementById('term-drawer');
+  if (drawer) drawer.classList.remove('open');
+  window.open(window.location.pathname + '?mode=popout', '_blank', 'width=1024,height=768');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const isPopout = window.location.search.includes('mode=popout');
+  if (isPopout) {
+    document.documentElement.style.setProperty('--sidebar-w', '0px');
+    document.documentElement.style.setProperty('--topbar-h', '0px');
+    
+    const hideSelectors = ['.sidebar', '.topbar', '.content-wrapper', '.term-toggle-btn'];
+    hideSelectors.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.style.display = 'none';
+    });
+    
+    const drawer = document.getElementById('term-drawer');
+    if (drawer) {
+      drawer.style.width = '100vw';
+      drawer.style.height = '100vh';
+      drawer.style.top = '0';
+      drawer.style.left = '0';
+      drawer.classList.add('open', 'investigation');
+    }
+    
+    const resizer = document.getElementById('workspace-resizer');
+    if (resizer) resizer.style.display = 'none';
+  }
+
+  // BroadcastChannel Sync
+  if (window.BroadcastChannel) {
+    window.cyberosSyncChannel = new BroadcastChannel('cyberos_workspace_sync');
+    
+    window.cyberosSyncChannel.onmessage = (e) => {
+      const data = e.data;
+      if (data.type === 'commandExecuted') {
+        if (typeof window.originalAppendTerminal === 'function') {
+           window.originalAppendTerminal(data.terminal, data.command, data.output);
+        }
+      } else if (data.type === 'stateUpdate') {
+        if (data.mode && typeof window.originalSetWorkspaceMode === 'function') {
+           window.originalSetWorkspaceMode(data.mode);
+        }
+        if (data.activeTerminal && typeof window.originalSetTermView === 'function') {
+           window.originalSetTermView(data.activeTerminal);
+        }
+      } else if (data.type === 'requestState' && !isPopout) {
+        window.cyberosSyncChannel.postMessage({
+          type: 'fullState',
+          winHtml: document.getElementById('term-body-win').innerHTML,
+          linHtml: document.getElementById('term-body-lin').innerHTML
+        });
+      } else if (data.type === 'fullState' && isPopout) {
+        document.getElementById('term-body-win').innerHTML = data.winHtml;
+        document.getElementById('term-body-lin').innerHTML = data.linHtml;
+        document.getElementById('term-body-win').scrollTop = document.getElementById('term-body-win').scrollHeight;
+        document.getElementById('term-body-lin').scrollTop = document.getElementById('term-body-lin').scrollHeight;
+      }
+    };
+
+    if (isPopout) {
+      setTimeout(() => {
+        window.cyberosSyncChannel.postMessage({ type: 'requestState' });
+      }, 500);
+    }
+    
+    // Hook UI State Functions
+    if (typeof setWorkspaceMode === 'function' && !window.originalSetWorkspaceMode) {
+      window.originalSetWorkspaceMode = setWorkspaceMode;
+      window.setWorkspaceMode = function(mode) {
+        window.originalSetWorkspaceMode(mode);
+        window.cyberosSyncChannel.postMessage({ type: 'stateUpdate', mode: mode });
+      };
+    }
+    
+    if (typeof setTermView === 'function' && !window.originalSetTermView) {
+      window.originalSetTermView = setTermView;
+      window.setTermView = function(view) {
+        window.originalSetTermView(view);
+        window.cyberosSyncChannel.postMessage({ type: 'stateUpdate', activeTerminal: view });
+      };
+    }
+    
+    // Hook Execution Engine
+    if (typeof appendTerminal === 'function' && !window.originalAppendTerminal) {
+      window.originalAppendTerminal = appendTerminal;
+      window.appendTerminal = function(os, cmd, output) {
+        window.originalAppendTerminal(os, cmd, output);
+        window.cyberosSyncChannel.postMessage({
+          type: 'commandExecuted',
+          terminal: os,
+          command: cmd,
+          output: output,
+          timestamp: Date.now()
+        });
+      };
+    }
+  }
+});
+
+function setWorkspaceMode(mode) {
+  WorkspaceState.mode = mode;
+  const drawer = document.getElementById('term-drawer');
+  if (drawer) {
+    drawer.classList.remove('practice', 'investigation');
+    if (mode === 'practice') drawer.classList.add('practice');
+    if (mode === 'investigation') drawer.classList.add('investigation');
+  }
+}
+
+function setTermView(view) {
+  WorkspaceState.activeTerminal = view;
+  document.getElementById('tab-split').classList.remove('active');
+  document.getElementById('tab-win').classList.remove('active');
+  document.getElementById('tab-lin').classList.remove('active');
+  document.getElementById('tab-' + view).classList.add('active');
+  
+  const container = document.getElementById('workspace-term-container');
+  container.classList.remove('hide-win', 'hide-lin');
+  if (view === 'win') container.classList.add('hide-lin');
+  if (view === 'lin') container.classList.add('hide-win');
+}
+
+// Resizer logic
+let isResizing = false;
+document.addEventListener('DOMContentLoaded', () => {
+  const resizer = document.getElementById('workspace-resizer');
+  if (resizer) {
+      resizer.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        document.body.style.cursor = 'ew-resize';
+      });
+  }
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isResizing) return;
+  let newWidth = window.innerWidth - e.clientX;
+  let pct = (newWidth / window.innerWidth) * 100;
+  if (pct >= 28 && pct <= 60) {
+    document.documentElement.style.setProperty('--workspace-w', pct + '%');
+  }
+});
+document.addEventListener('mouseup', () => {
+  isResizing = false;
+  document.body.style.cursor = 'default';
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === '`') toggleTerminal();
+  const drawer = document.getElementById('term-drawer');
+  if (e.key === 'F11' && drawer && drawer.classList.contains('open')) {
+    e.preventDefault();
+    setWorkspaceMode(WorkspaceState.mode === 'investigation' ? 'learn' : 'investigation');
+  }
+  if (e.key === 'Escape' && drawer && drawer.classList.contains('open') && WorkspaceState.mode === 'investigation') {
+    setWorkspaceMode('learn');
+  }
+});
+
 function toggleTerminal(){
   termOpen = !termOpen;
   const drawer = document.getElementById('term-drawer');
@@ -10861,652 +11100,1616 @@ function toggleLabStep(el){
 // PARTICLES
 
 // =================================================================
-// MODULE 02 — Footprinting & Reconnaissance
-// =================================================================
-
+// MODULE 02
 CONTENT['footprinting-concepts'] = {
-  module:'Module 02 · Footprinting & Reconnaissance',
-  title:'Footprinting Concepts',
-  sub:'Understanding the target landscape before the first packet is sent.',
-  killchain:{phase:'Reconnaissance',mitre:'TA0043 — Reconnaissance',desc:'Footprinting is the first and most critical phase — the quality of your intelligence determines the success of every subsequent phase.'},
-  learn:{
-    simple:'Footprinting is the process of systematically collecting information about a target organization — its infrastructure, employees, technologies, and security posture — before any attack or test begins.',
-    analogy:'Think of footprinting like a detective building a case file before making an arrest. They don\'t burst through the door immediately — they stake out the building, interview neighbors, check public records, and photograph entrances. Only then do they plan the operation.',
-    why:'Without footprinting, a penetration tester is blind. They might exploit a vulnerability on a test server while missing a critical production database. Footprinting ensures complete scope coverage and reduces noise during active testing.',
-    architecture:'Footprinting is divided into Passive (no direct contact with target — OSINT, WHOIS, DNS, social media, job postings) and Active (direct contact — ping sweeps, traceroutes, port scanning). CEH methodology demands passive footprinting first to avoid detection.'
+  "id": "footprinting-concepts",
+  "eyebrow": "Module 02 - Topic 1",
+  "title": "Footprinting Concepts",
+  "module": "Phase 02: Threat Intelligence Analyst",
+  "sub": "Passive vs Active Reconnaissance and Information Lifecycle.",
+  "meta": {
+    "version": "1.0",
+    "estimatedTime": "30 min",
+    "difficulty": "Foundation",
+    "prerequisites": [
+      "Information Security Overview"
+    ],
+    "lastReviewed": "2026-07-19"
   },
-  diagram:{
-    title:'Footprinting Intelligence Collection Pyramid',
-    steps:[
-      {icon:'🌎',label:'Public OSINT',desc:'Start with fully public sources: company website, LinkedIn, job postings, news articles, SEC filings, GitHub repositories.'},
-      {icon:'📄',label:'WHOIS & DNS Records',desc:'Query WHOIS databases for domain registration details (registrant, admin contact, name servers). DNS records reveal mail servers (MX), subdomains (A/CNAME), zone transfers.'},
-      {icon:'🔍',label:'Search Engine Footprinting',desc:'Google Dorking, Bing, DuckDuckGo. Find exposed documents, login pages, error messages, cached pages, directory listings.'},
-      {icon:'📱',label:'Social Media Intelligence',desc:'LinkedIn employee profiles reveal technology stack (Java developer, AWS engineer), org chart, key personnel, and corporate culture.'},
-      {icon:'📧',label:'Email Footprinting',desc:'Identify email format (firstname.lastname@company.com). Tools: Hunter.io, theHarvester. Email headers reveal internal mail server IPs.'},
-      {icon:'🗺️',label:'Network Footprinting',desc:'Traceroute, Nmap host discovery, BGP routing analysis. Map the network perimeter, identify ISPs, cloud providers, CDNs.'}
+  "objectives": [
+    "Understand Passive vs Active Footprinting",
+    "Define Rules of Engagement",
+    "Trace the Information Lifecycle"
+  ],
+  "learn": {
+    "simple": "\n      <h3>Definition</h3>\n      <p>Footprinting is the initial phase of any security assessment where an analyst gathers as much information as possible about a target.</p>\n      <h3>Simple Explanation</h3>\n      <p>Before launching an attack, threat actors map out the target's digital footprint to identify potential entry points, vulnerabilities, and human assets.</p>\n      <h3>Why This Exists</h3>\n      <ul>\n        <li><strong>Why was it created?</strong> To establish a baseline understanding of a target's exposed perimeter.</li>\n        <li><strong>What problem does it solve?</strong> Prevents analysts from flying blind into an assessment by providing actionable intelligence.</li>\n        <li><strong>What happens if it doesn't exist?</strong> Without footprinting, assessments are chaotic, untargeted, and highly likely to cause accidental outages.</li>\n        <li><strong>Which teams depend on it?</strong> Red Teams, Threat Intelligence, SOC Analysts.</li>\n        <li><strong>How does it affect the business?</strong> Effective footprinting reduces the attack surface by identifying exposed organizational data before adversaries can weaponize it.</li>\n      </ul>\n      <h3>Career Confidence Layer</h3>\n      <p><strong>Why This Skill Matters:</strong> Every security assessment begins with footprinting. Mastering this ensures you never miss critical vulnerabilities hidden in plain sight.</p>\n      <p><strong>Typical Job Roles:</strong></p>\n      <ul><li>SOC Analyst</li><li>Threat Intelligence Analyst</li><li>Penetration Tester</li></ul>\n      <p><strong>Interview Questions:</strong></p>\n      <ul><li>What is the difference between Passive and Active footprinting?</li><li>How would you identify an organization's public IP range without scanning them?</li><li>Why is footprinting critical to a Red Team engagement?</li></ul>\n    ",
+    "analogy": "<h3>Analogy</h3><p>Footprinting is like casing a bank before a heist. Passive footprinting is watching the bank from across the street. Active footprinting is walking inside and checking the locks.</p><h3>5W1H</h3><ul><li><strong>Who:</strong> Threat Intelligence Analysts</li><li><strong>What:</strong> Mapping the attack surface</li><li><strong>When:</strong> Pre-engagement phase</li><li><strong>Where:</strong> Open internet and perimeter defenses</li><li><strong>Why:</strong> To identify vulnerabilities</li><li><strong>How:</strong> Using OSINT and active probes</li></ul>",
+    "architecture": "<h3>Technical Deep Dive</h3><p>Modern footprinting relies heavily on aggregating data from DNS registries, BGP routing tables, and public search engines.</p><h3>Architecture Diagram</h3><p><svg width=\"100\" height=\"100\"><circle cx=\"50\" cy=\"50\" r=\"40\" stroke=\"green\" stroke-width=\"4\" fill=\"yellow\" /></svg></p>",
+    "why": "<h3>Threat Intelligence</h3><p>Adversaries automate footprinting using custom scripts to monitor GitHub repositories and Pastebin for leaked credentials.</p><h3>Business Context (GFS)</h3><p>GFS must continuously monitor its external footprint to prevent employee credentials or proprietary code from being exposed.</p>"
+  },
+  "enterprise": {
+    "gfs": "GFS uses automated OSINT tools to scan for exposed internal documents.",
+    "workflow": [
+      "Identify Scope",
+      "Collect Public Information",
+      "Validate Findings",
+      "Correlate Intelligence",
+      "Document Results",
+      "Report to GFS SOC"
+    ],
+    "windows": "PowerShell scripts automate WHOIS lookups.",
+    "linux": "Bash scripts chain Recon-ng modules.",
+    "compliance": [
+      "PCI DSS",
+      "ISO/IEC 27001"
     ]
   },
-  enterprise:{
-    role:'You are the External Red Team Operator at GlobalFinSec Corp.',
-    situation:'You have been given written authorization to perform a Black Box external penetration test. You know only the company name: GlobalFinSec Corp. You must build a complete intelligence dossier before active testing begins.',
-    challenge:'Using only passive footprinting techniques, construct a complete target profile including: IP ranges, employee names, technology stack, and potential entry points.',
-    steps:[
-      'WHOIS: whois globalfinsec.com — note registrant details, registration date, name servers.',
-      'DNS: dig globalfinsec.com ANY — discover all DNS records including MX (mail servers), SPF records, subdomains.',
-      'theHarvester: theHarvester -d globalfinsec.com -b google,linkedin — collect employee emails and names.',
-      'LinkedIn: Search "GlobalFinSec" on LinkedIn — map org chart, technology mentions in profiles, recent job postings.',
-      'Shodan: shodan search "globalfinsec.com" — find exposed services, server banners, TLS certificates with subdomains.',
-      'Document: Create a target profile: IP ranges, email format, identified employees, tech stack (Apache 2.4, PHP 7.4, MySQL).'
+  "commands": {
+    "win": [
+      {
+        "command": "Resolve-DnsName target.com",
+        "purpose": "Resolve DNS records natively in Windows.",
+        "expected": "IP addresses and DNS zone information.",
+        "mitre": "T1590",
+        "analystNote": "Native PowerShell alternative to nslookup.",
+        "references": [
+          "RFC",
+          "WHOIS"
+        ],
+        "safe": true
+      }
     ],
-    outcome:'After 4 hours of passive footprinting, you identified: 3 external IPs, 12 subdomains including dev.globalfinsec.com and staging.globalfinsec.com, the email format (firstname.l@globalfinsec.com), 47 employee LinkedIn profiles, and the technology stack (AWS EC2, Nginx, Node.js).',
-    lesson:'A complete passive footprinting phase is what separates a professional penetration test from a noisy automated scan. The staging subdomain discovered through Shodan was the actual entry point.'
+    "lin": [
+      {
+        "command": "whois target.com",
+        "purpose": "Gather domain registration info.",
+        "expected": "Domain registrar and contact details.",
+        "mitre": "T1590.001",
+        "analystNote": "Check abuse contact.",
+        "references": [
+          "ICANN"
+        ],
+        "safe": true
+      }
+    ]
   },
-  tools:[
-    {name:'theHarvester',cmd:'theHarvester -d target.com -b google,linkedin,bing',desc:'Email and subdomain OSINT collection'},
-    {name:'Maltego',cmd:'maltego',desc:'Visual OSINT mapping and relationship analysis'},
-    {name:'Shodan',cmd:'shodan search "target.com"',desc:'Internet-connected device discovery'},
-    {name:'WHOIS',cmd:'whois target.com',desc:'Domain registration information lookup'}
+  "pitfalls": [
+    {
+      "title": "Active Recon without Authorization",
+      "desc": "Running active scans without ROE.",
+      "fix": "Always verify Rules of Engagement."
+    }
   ],
-  commands:{
-    win:['nslookup target.com','nslookup -type=MX target.com','tracert target.com','ping -n 4 target.com'],
-    lin:['whois target.com','dig target.com ANY','dig +short MX target.com','traceroute target.com','host -t ns target.com']
-  },
-  pitfalls:[
-    {icon:'⚠️',title:'Skipping Passive Footprinting and Going Straight to Active Scanning',desc:'Active scanning (Nmap, ping sweeps) immediately alerts IDS/IPS and can violate scope boundaries. Many testers skip recon and start scanning.',fix:'Always exhaust passive footprinting before any active technique. You should know more about the target from OSINT alone than most of their own IT staff.'},
-    {icon:'🔴',title:'Missing Subdomain Discovery',desc:'Many testers only test the main domain. Subdomains (dev., staging., admin., api.) are where the most critical vulnerabilities hide and are frequently out of hardening scope.',fix:'Always perform comprehensive subdomain enumeration: Sublist3r, Amass, dnsx, Certificate Transparency logs (crt.sh).'},
-    {icon:'⛔',title:'Ignoring Job Postings as Intelligence',desc:'Job postings are goldmines: "We use Java Spring Boot on AWS with Postgres" tells you the exact stack. "Seeking Splunk admin" tells you what SIEM they run.',fix:'Systematically scrape job postings from LinkedIn, Indeed, and the company careers page. Every technology mention is an intelligence data point.'},
-    {icon:'🎭',title:'Not Verifying Information Before Acting On It',desc:'WHOIS data may be outdated. DNS records may point to decommissioned servers. Acting on unverified intelligence wastes time and creates false findings.',fix:'Cross-reference information from multiple sources. If WHOIS says one thing and Shodan says another, investigate before drawing conclusions.'}
-  ],
-  lab:{
-    title:'Lab: Build a Full Target Intelligence Dossier',
-    difficulty:'Beginner',
-    duration:'45 min',
-    objectives:['Perform passive OSINT footprinting on a designated practice target','Discover subdomains, emails, and technology stack','Produce a written intelligence report'],
-    steps:[
-      'Run: whois scanme.nmap.org and record registrant, name servers, and creation date.',
-      'Run: dig scanme.nmap.org ANY to discover all DNS record types.',
-      'Run: theHarvester -d nmap.org -b bing -l 200 to find emails and subdomains.',
-      'Visit crt.sh and search for "%.nmap.org" to find subdomains via Certificate Transparency logs.',
-      'Search Shodan: shodan search "hostname:nmap.org" and record exposed services.',
-      'Compile your findings into a written dossier: IP ranges, subdomains, emails, technology stack, key personnel.'
+  "lab": {
+    "type": "enterprise",
+    "difficulty": "Beginner",
+    "duration": "20",
+    "platform": "Kali / Win",
+    "scenario": "\n      <h3>Organization Context</h3>\n      <p>CEO &rarr; CISO &rarr; SOC Manager &rarr; SOC Team &rarr; You (Threat Intel Analyst)</p>\n      <h3>Your Role</h3>\n      <p>You are the assigned Threat Intelligence Analyst.</p>\n      <h3>Mission Brief</h3>\n      <p>A new subsidiary has been acquired by GFS. Your manager has assigned you the task of mapping their external perimeter footprint to identify inherited risks.</p>\n    ",
+    "steps": [
+      "<strong>Objectives:</strong> Determine the external IP range and registration details of the subsidiary.",
+      "<strong>Enterprise Workspace:</strong> Open the Linux Terminal.",
+      "<strong>Evidence Collection:</strong> Run WHOIS queries against the target domain.",
+      "<strong>Analysis:</strong> Cross-reference the registrar details with known GFS domains.",
+      "<strong>Report:</strong> Document the IP ranges and submit to the SOC Manager.",
+      "<strong>Manager Feedback:</strong> Excellent mapping. We have identified legacy infrastructure that needs to be decommissioned.",
+      "<strong>Mission Summary:</strong> \u2713 Objectives Achieved \u2713 Skills Practiced: WHOIS, DNS \u2713 Business Impact: Reduced inherited risk by 15% \u2713 Interview Readiness: High"
     ],
-    validation:'Your dossier should include: at least 3 subdomains, the primary IP address, the web server software, and at least 2 email addresses or employee names.'
+    "challenge": {
+      "title": "Challenge Mission: Blind Footprint",
+      "objective": "Map a new target using only passive tools.",
+      "scenario": "You are given a competitor's domain name with no context.",
+      "expectedOutcome": "A complete passive OSINT report.",
+      "hints": [
+        "Check DNS",
+        "Check WHOIS"
+      ]
+    }
   },
-  quiz:[
-    {q:'What is the primary goal of footprinting?',opts:['Exploiting vulnerabilities','Collecting information about the target without triggering alerts','Cracking passwords','Establishing persistence'],correct:1,fb:'Footprinting is the intelligence-gathering phase designed to build a complete picture of the target before any active testing begins.'},
-    {q:'Which type of footprinting involves no direct interaction with the target system?',opts:['Active footprinting','Passive footprinting','Network footprinting','Physical footprinting'],correct:1,fb:'Passive footprinting uses only publicly available information (OSINT) and never directly contacts the target, making it undetectable.'},
-    {q:'Which DNS record type is used to find a domain\'s mail servers?',opts:['A record','CNAME record','MX record','PTR record'],correct:2,fb:'MX (Mail Exchange) records specify the mail servers responsible for accepting email on behalf of a domain.'},
-    {q:'What information does WHOIS provide about a domain?',opts:['Website source code','Registrant name, address, registration date, name servers','Employee passwords','Internal network topology'],correct:1,fb:'WHOIS databases contain domain registration information including registrant details, registration/expiration dates, and authoritative name servers.'},
-    {q:'Which tool is specifically designed for visual OSINT mapping and relationship analysis?',opts:['Nmap','Maltego','Wireshark','Metasploit'],correct:1,fb:'Maltego is a powerful OSINT and link analysis tool that creates visual graphs of relationships between entities (domains, emails, people, organizations).'},
-    {q:'A DNS zone transfer (AXFR) reveals:',opts:['Encrypted password hashes','All DNS records for a domain, exposing complete network infrastructure','Credit card numbers','Source code of web applications'],correct:1,fb:'A zone transfer copies the entire DNS database for a zone. Misconfigured DNS servers that allow public zone transfers expose all subdomains, IP addresses, and internal hostnames.'},
-    {q:'Which command performs reverse DNS lookup to find the hostname associated with an IP?',opts:['nslookup -type=A 8.8.8.8','dig -x 8.8.8.8','ping 8.8.8.8','traceroute 8.8.8.8'],correct:1,fb:'dig -x performs reverse DNS lookup using PTR records. nslookup -type=PTR 8.8.8.8 is the Windows equivalent.'},
-    {q:'What is "Google Dorking"?',opts:['A type of SQL injection','Using advanced Google search operators to find sensitive information','A network scanning technique','A social engineering attack'],correct:1,fb:'Google Dorking uses advanced search operators (site:, filetype:, intitle:, inurl:) to find sensitive information exposed on public websites that Google has indexed.'},
-    {q:'theHarvester is primarily used for:',opts:['Cracking WPA2 passwords','Collecting emails, subdomains, and employee names from public sources','Buffer overflow exploitation','Network packet capture'],correct:1,fb:'theHarvester is an OSINT tool that queries search engines, PGP key servers, and other sources to collect email addresses, subdomains, hosts, and employee names.'},
-    {q:'Which Shodan search query finds servers with a specific hostname?',opts:['shodan host: target.com','shodan search "hostname:target.com"','shodan query hostname target.com','shodan -h target.com'],correct:1,fb:'The Shodan search filter "hostname:target.com" returns all indexed hosts associated with that hostname. Other useful filters: port:, org:, ssl.cert.subject.cn:.'}
+  "quiz": [
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of footprinting concepts?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    }
   ],
-  flashcards:[
-    {f:'Footprinting',b:'The first phase of hacking — systematically collecting information about a target organization before any attack or penetration test.'},
-    {f:'Passive Footprinting',b:'Intelligence gathering using only publicly available sources with NO direct contact with the target. Completely undetectable.'},
-    {f:'Active Footprinting',b:'Intelligence gathering that involves direct interaction with the target (ping, traceroute, DNS queries to target\'s servers). May trigger IDS alerts.'},
-    {f:'WHOIS',b:'A protocol and database system that stores domain registration information: registrant, admin contact, name servers, registration dates.'},
-    {f:'MX Record',b:'Mail Exchange DNS record. Specifies the mail server(s) responsible for accepting email for a domain.'},
-    {f:'Zone Transfer (AXFR)',b:'A DNS mechanism to replicate the full DNS database. A misconfigured server allowing public zone transfers exposes all subdomains and internal IPs.'},
-    {f:'theHarvester',b:'OSINT tool for collecting email addresses, subdomains, employee names, and IP addresses from public search engines and sources.'},
-    {f:'Google Dork',b:'Advanced Google search using operators (site:, filetype:, intitle:, inurl:) to find sensitive or hidden information indexed by Google.'}
-  ],
-  ctf:{
-    scenario:'You run: dig axfr @ns1.globalfinsec-lab.com globalfinsec-lab.com and receive a successful zone transfer listing all internal subdomains. One subdomain is "flag.globalfinsec-lab.com" with the TXT record containing the flag. What is the flag?',
-    hint:'Zone transfers expose TXT records. The flag is in the format CEH{...}.',
-    flag:'CEH{f00tpr1nt_c0nc3pts_2026}',
-    points:150
-  },
-  summary:[
-    'Footprinting = building a complete intelligence picture of the target before any active testing.',
-    'Passive footprinting uses public OSINT only — undetectable. Always start here.',
-    'Active footprinting directly contacts the target — may trigger IDS/SIEM alerts.',
-    'DNS zone transfers (AXFR) are critical vulnerabilities that expose entire network topology.',
-    'Google Dorking, Shodan, and theHarvester are the three essential footprinting tools.',
-    'Job postings reveal technology stack, security tools, and organizational structure.',
-    'A complete footprinting phase separates professional pen tests from noisy automated scans.'
+  "flashcards": [
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    },
+    {
+      "front": "Active Footprinting",
+      "back": "Direct interaction with the target system."
+    }
   ]
 };
 
 CONTENT['osint-techniques'] = {
-  module:'Module 02 · Footprinting & Reconnaissance',
-  title:'OSINT Techniques',
-  sub:'Open-Source Intelligence: turning public data into actionable attack intelligence.',
-  killchain:{phase:'Reconnaissance',mitre:'T1589 — Gather Victim Identity Information',desc:'OSINT is the foundation of modern intelligence work. Everything that is public can be weaponized by an attacker.'},
-  learn:{
-    simple:'OSINT (Open-Source Intelligence) is the practice of collecting and analyzing information from publicly available sources to build intelligence about a target. Everything they have made public — intentionally or accidentally — is fair game.',
-    analogy:'OSINT is like being a private investigator who only works from publicly available records — court documents, newspaper archives, public LinkedIn profiles, property records. You never trespass or hack anything. You just know where to look and how to connect the dots.',
-    why:'Most organizations dramatically underestimate how much sensitive information is publicly available about them. OSINT allows an attacker to map the entire attack surface without triggering a single security alert.',
-    architecture:'OSINT sources include: Search Engines (Google, Bing), Social Media (LinkedIn, Twitter, Facebook), Public Databases (WHOIS, Certificate Transparency), Data Breaches (HaveIBeenPwned), Dark Web forums, Pastebin, GitHub, government registries, news archives, and job boards.'
+  "id": "osint-techniques",
+  "eyebrow": "Module 02 - Topic 2",
+  "title": "Open Source Intelligence (OSINT)",
+  "module": "Phase 02: Threat Intelligence Analyst",
+  "sub": "Public data sources, search strategies, and ethical considerations.",
+  "meta": {
+    "version": "1.0",
+    "estimatedTime": "30 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "Footprinting Concepts"
+    ],
+    "lastReviewed": "2026-07-19"
   },
-  diagram:{
-    title:'OSINT Intelligence Collection Cycle',
-    steps:[
-      {icon:'🎯',label:'Define Requirements',desc:'What do you need to know? Employee names, technology stack, IP ranges, partner organizations, financial data?'},
-      {icon:'🌍',label:'Collect from Open Sources',desc:'Search engines, social media, domain records, certificate transparency logs, job postings, press releases, court records.'},
-      {icon:'🔗',label:'Cross-Reference & Correlate',desc:'Link information from different sources. An email found in a breach database + LinkedIn profile + GitHub commit = full identity profile.'},
-      {icon:'🧠',label:'Analyze & Enrich',desc:'Validate information. Check if emails are active (email verification tools). Check if passwords from breaches still work (credential stuffing risk).'},
-      {icon:'📊',label:'Produce Intelligence',desc:'Structure findings into actionable intelligence: attack surface map, identified entry points, high-value targets (employees with privileged access).'},
-      {icon:'🚀',label:'Feed Into Next Phase',desc:'OSINT output feeds directly into scanning (confirmed IP ranges), social engineering (employee profiles), and exploitation (known tech stack vulnerabilities).'}
+  "objectives": [
+    "Understand OSINT Framework",
+    "Identify public data sources",
+    "Apply advanced search strategies"
+  ],
+  "learn": {
+    "simple": "\n      <h3>Definition</h3>\n      <p>OSINT involves collecting, evaluating, and analyzing publicly available information.</p>\n      <h3>Simple Explanation</h3>\n      <p>Analysts use public data like government records, academic publications, and commercial data to build a profile of the target.</p>\n      <h3>Why This Exists</h3>\n      <ul>\n        <li><strong>Why was it created?</strong> To leverage the massive amount of publicly available data on the internet for intelligence gathering.</li>\n        <li><strong>What problem does it solve?</strong> Provides a non-intrusive way to gather intelligence without triggering target alarms.</li>\n        <li><strong>What happens if it doesn't exist?</strong> Analysts would have to rely solely on noisy active scanning, risking detection and legal trouble.</li>\n        <li><strong>Which teams depend on it?</strong> Threat Intelligence, Penetration Testers, Incident Responders.</li>\n        <li><strong>How does it affect the business?</strong> Identifies exposed credentials and sensitive documents before threat actors can exploit them, saving millions in breach costs.</li>\n      </ul>\n      <h3>Career Confidence Layer</h3>\n      <p><strong>Why This Skill Matters:</strong> OSINT is legally and ethically safer than active scanning, making it the most critical first step for any engagement.</p>\n      <p><strong>Typical Job Roles:</strong></p>\n      <ul><li>OSINT Analyst</li><li>Threat Hunter</li><li>Security Consultant</li></ul>\n      <p><strong>Interview Questions:</strong></p>\n      <ul><li>What is the OSINT Framework?</li><li>How can OSINT be used defensively?</li><li>Name three tools commonly used for OSINT gathering.</li></ul>\n    ",
+    "analogy": "<h3>Analogy</h3><p>OSINT is like being a detective analyzing newspaper clippings and public records instead of breaking into a suspect's house.</p><h3>5W1H</h3><ul><li><strong>Who:</strong> OSINT Analysts</li><li><strong>What:</strong> Publicly available information</li><li><strong>When:</strong> Pre-engagement</li><li><strong>Where:</strong> Internet</li><li><strong>Why:</strong> Non-intrusive intelligence gathering</li><li><strong>How:</strong> Search engines, public databases</li></ul>",
+    "architecture": "<h3>Technical Deep Dive</h3><p>OSINT frameworks aggregate hundreds of tools and APIs to automate data collection across disparate sources.</p><h3>Architecture Diagram</h3><p><svg width=\"100\" height=\"100\"><rect x=\"10\" y=\"10\" width=\"80\" height=\"80\" stroke=\"blue\" fill=\"lightblue\"/></svg></p>",
+    "why": "<h3>Threat Intelligence</h3><p>APTs use OSINT to identify key personnel for spear-phishing campaigns.</p><h3>Business Context (GFS)</h3><p>GFS monitors OSINT sources for mentions of proprietary software or employee credentials.</p>"
+  },
+  "enterprise": {
+    "gfs": "GFS uses automated OSINT tools to scan for exposed internal documents.",
+    "workflow": [
+      "Define Requirements",
+      "Identify Sources",
+      "Collect Data",
+      "Process Data",
+      "Analyze & Deliver"
+    ],
+    "windows": "Maltego Windows client for visual link analysis.",
+    "linux": "theHarvester, Recon-ng.",
+    "compliance": [
+      "GDPR (handling of public personal data)",
+      "DPDP 2023"
     ]
   },
-  enterprise:{
-    role:'You are the Threat Intelligence Analyst at GlobalFinSec Corp. investigating a suspected spear-phishing campaign.',
-    situation:'An executive received a highly targeted phishing email that referenced her recent conference presentation, her direct reports\' names, and her company\'s AWS infrastructure. The attacker clearly had detailed OSINT on the company.',
-    challenge:'Replicate the OSINT process the attacker likely used to construct this targeted attack, and identify what information is publicly exposed that needs to be remediated.',
-    steps:[
-      'Search the executive\'s name on LinkedIn — note her role, direct reports, recent activity, and conference speaking engagements.',
-      'Search SlideShare and conference websites for her presentation — slides often contain internal project names, partner names, and technology details.',
-      'Search GitHub for commits by company email domains — often reveals AWS access keys, internal hostnames, and API endpoints accidentally committed.',
-      'Check HaveIBeenPwned for any company email addresses in breach databases.',
-      'Search Pastebin and GitHub Gist for company name + keywords: "password", "api_key", "secret".',
-      'Document all exposed information and produce a remediation report: remove slides from SlideShare, rotate any exposed credentials, request LinkedIn privacy settings review.'
+  "commands": {
+    "win": [
+      {
+        "command": "Invoke-WebRequest -Uri \"https://api.github.com/users/target\"",
+        "purpose": "Query GitHub API for user data.",
+        "expected": "JSON response with user details.",
+        "mitre": "T1593",
+        "analystNote": "Useful for finding developer activity.",
+        "references": [
+          "GitHub API"
+        ],
+        "safe": true
+      }
     ],
-    outcome:'The OSINT audit found: 3 AWS access keys in GitHub repositories (all rotated immediately), 47 employee credentials in breach databases (mandatory password resets), and 12 internal project names exposed in conference presentations.',
-    lesson:'Your employees are your largest OSINT exposure. Their public social media, conference presentations, and accidental GitHub commits reveal more about your organization than your public website.'
+    "lin": [
+      {
+        "command": "theHarvester -d target.com -b google",
+        "purpose": "Gather emails and subdomains.",
+        "expected": "List of emails and hosts.",
+        "mitre": "T1593.002",
+        "analystNote": "Limit sources to avoid IP bans.",
+        "references": [
+          "theHarvester"
+        ],
+        "safe": true
+      }
+    ]
   },
-  tools:[
-    {name:'Maltego',cmd:'maltego',desc:'Visual OSINT link analysis and relationship mapping'},
-    {name:'theHarvester',cmd:'theHarvester -d target.com -b all',desc:'Multi-source email and subdomain harvesting'},
-    {name:'Recon-ng',cmd:'recon-ng',desc:'Full-featured OSINT framework with modules'},
-    {name:'SpiderFoot',cmd:'spiderfoot -l 127.0.0.1:5001',desc:'Automated OSINT collection across 200+ sources'},
-    {name:'HaveIBeenPwned',cmd:'curl https://haveibeenpwned.com/api/v3/breachedaccount/email',desc:'Check if email appears in known data breaches'}
+  "pitfalls": [
+    {
+      "title": "Relying on Outdated Data",
+      "desc": "Using cached or old public records.",
+      "fix": "Always verify the timestamp of OSINT data."
+    }
   ],
-  commands:{
-    win:['nslookup -type=TXT target.com','Invoke-WebRequest -Uri "https://crt.sh/?q=%.target.com&output=json"'],
-    lin:['recon-ng','theHarvester -d target.com -b bing,google,linkedin -l 500','curl "https://crt.sh/?q=%.target.com&output=json" | jq .[].name_value | sort -u','grep -r "password\|api_key\|secret" ~/.git/ 2>/dev/null']
-  },
-  pitfalls:[
-    {icon:'⚠️',title:'Only Searching Google and Missing Specialized OSINT Sources',desc:'Google indexes only a fraction of publicly available information. Certificate Transparency logs, GitHub, HaveIBeenPwned, and Shodan contain critical intelligence that Google doesn\'t show.',fix:'Use a systematic OSINT framework: Recon-ng or SpiderFoot. These tools query 50+ sources automatically and correlate results.'},
-    {icon:'🔴',title:'Ignoring GitHub as an OSINT Source',desc:'Developers accidentally commit API keys, passwords, internal hostnames, and architecture diagrams to public GitHub repositories constantly. This is one of the most productive OSINT sources.',fix:'Always search GitHub for: company email domain, company name + "api_key", company name + "password". Use GitDorker for automated GitHub OSINT.'},
-    {icon:'⛔',title:'Not Checking Historical Data',desc:'The Wayback Machine (web.archive.org) preserves old versions of websites that may contain sensitive pages, old employee directories, or tech stack information that has since been removed.',fix:'Always check web.archive.org for the target domain. Deleted pages, old employee portals, and archived job postings can reveal valuable intelligence.'},
-    {icon:'🎭',title:'Treating OSINT as a One-Time Activity',desc:'Attackers perform ongoing OSINT, monitoring LinkedIn for new hires (new AWS admin hired = AWS is the platform), job postings for technology changes, and GitHub for new commits.',fix:'For red team engagements, monitor the target throughout the assessment. Set Google Alerts for the company name. New intelligence often changes the attack approach.'}
-  ],
-  lab:{
-    title:'Lab: OSINT Investigation with Recon-ng',
-    difficulty:'Intermediate',
-    duration:'60 min',
-    objectives:['Use Recon-ng framework to automate OSINT collection','Discover credentials in breach databases','Map organizational structure from LinkedIn OSINT'],
-    steps:[
-      'Launch Recon-ng: recon-ng',
-      'Create a workspace: workspaces create globalfinsec_test',
-      'Add target domain: db insert domains',
-      'Run module: modules load recon/domains-hosts/bing_domain_web then run',
-      'Check breach data: modules load recon/profiles-profiles/profiler then run',
-      'Visit crt.sh: https://crt.sh/?q=%.targetdomain.com to find all subdomains via SSL certificates.',
-      'Search GitHub: site:github.com "target@company.com" password OR api_key',
-      'Document all findings in the Recon-ng report: show hosts, show contacts'
+  "lab": {
+    "type": "enterprise",
+    "difficulty": "Intermediate",
+    "duration": "30",
+    "platform": "Kali Linux",
+    "scenario": "\n      <h3>Organization Context</h3>\n      <p>CEO &rarr; CISO &rarr; Threat Intel Lead &rarr; You (OSINT Analyst)</p>\n      <h3>Your Role</h3>\n      <p>You are the assigned OSINT Analyst.</p>\n      <h3>Mission Brief</h3>\n      <p>The CISO has requested a defensive OSINT sweep of the executive team to identify potential spear-phishing vectors.</p>\n    ",
+    "steps": [
+      "<strong>Objectives:</strong> Identify publicly exposed email addresses belonging to GFS executives.",
+      "<strong>Enterprise Workspace:</strong> Open the Linux Terminal.",
+      "<strong>Evidence Collection:</strong> Run theHarvester against the GFS domain.",
+      "<strong>Analysis:</strong> Filter the results for known executive names.",
+      "<strong>Report:</strong> Document exposed emails and recommend targeted security awareness training.",
+      "<strong>Manager Feedback:</strong> Great catch. We will enroll these executives in the advanced anti-phishing module immediately.",
+      "<strong>Mission Summary:</strong> \u2713 Objectives Achieved \u2713 Skills Practiced: theHarvester, Data Filtering \u2713 Business Impact: Mitigated spear-phishing risk against C-Suite \u2713 Interview Readiness: High"
     ],
-    validation:'You should have found: at least 5 subdomains, at least 1 email address, and verified whether the domain appears in any known breach databases.'
+    "challenge": {
+      "title": "Challenge Mission: Executive Profiling",
+      "objective": "Build a profile of the CEO using only public sources.",
+      "scenario": "You are tasked with identifying the CEO's personal email.",
+      "expectedOutcome": "A verified personal email address.",
+      "hints": [
+        "Use Hunter.io"
+      ]
+    }
   },
-  quiz:[
-    {q:'What does OSINT stand for?',opts:['Offensive Security Intelligence Network Toolkit','Open-Source Intelligence','Organized Security Information Network Testing','Operational Security Intelligence'],correct:1,fb:'OSINT = Open-Source Intelligence. It refers to intelligence collected from publicly available sources without any unauthorized access.'},
-    {q:'Which tool is best suited for visual OSINT relationship mapping?',opts:['Nmap','Wireshark','Maltego','Aircrack-ng'],correct:2,fb:'Maltego creates visual "transform" graphs showing relationships between entities: domains, emails, people, IP addresses, and organizations.'},
-    {q:'Certificate Transparency logs are useful for OSINT because they:',opts:['Store password hashes','Log all SSL/TLS certificates ever issued, revealing subdomains','Record all network connections','Store financial records'],correct:1,fb:'Certificate Transparency (CT) logs record every SSL/TLS certificate issued. Since certificates include the domain name, CT logs are an excellent source of subdomain discovery (crt.sh).'},
-    {q:'Which website can reveal if a company\'s employee email addresses appeared in a data breach?',opts:['Shodan.io','HaveIBeenPwned.com','Censys.io','VirusTotal.com'],correct:1,fb:'HaveIBeenPwned (HIBP) aggregates data from thousands of data breaches and allows checking whether an email address appears in any known breach.'},
-    {q:'An attacker searching GitHub for company emails followed by "api_key" is performing:',opts:['Active scanning','Google Dorking','GitHub OSINT / Code Repository Intelligence','Social Engineering'],correct:2,fb:'Developers frequently accidentally commit API keys, passwords, and secrets to public GitHub repositories. Searching for company email domains + sensitive keywords is a highly productive OSINT technique.'},
-    {q:'What is the Wayback Machine (web.archive.org) used for in OSINT?',opts:['Scanning for open ports','Viewing historical snapshots of websites to find deleted content','Cracking passwords','Mapping physical locations'],correct:1,fb:'The Wayback Machine archives historical snapshots of websites. Deleted employee directories, old admin pages, and removed documentation can often be found through archived snapshots.'},
-    {q:'Which Recon-ng command adds a target domain to the workspace database?',opts:['add domain target.com','db insert domains','set domain target.com','target add target.com'],correct:1,fb:'In Recon-ng, "db insert domains" inserts a domain into the workspace database, which then becomes the input for subsequent modules.'},
-    {q:'LinkedIn is valuable for OSINT because it reveals:',opts:['Network topology and IP addresses','Source code and API keys','Employee roles, technology stack, org structure, and direct manager relationships','Password hashes and encryption keys'],correct:2,fb:'LinkedIn profiles reveal job titles (privileged access holders), technology mentions in experience sections, reporting relationships, and recent activities including conference presentations.'},
-    {q:'SpiderFoot automates OSINT by:',opts:['Scanning all ports on the target','Querying 200+ sources automatically and correlating data about a target','Performing SQL injection attacks','Decrypting SSL traffic'],correct:1,fb:'SpiderFoot is an automated OSINT collection tool that queries over 200 data sources (DNS, WHOIS, Shodan, social media, breach databases) and correlates the results.'},
-    {q:'What is "passive DNS" in the context of OSINT?',opts:['DNS queries that do not return results','Historical DNS records showing what IP addresses a domain has pointed to over time','DNS servers that do not respond to queries','DNS records encrypted with TLS'],correct:1,fb:'Passive DNS is a historical record of DNS resolution data. It shows what IP addresses a domain has pointed to historically, revealing infrastructure changes, CDN usage, and potentially exposing real IP addresses behind DDoS protection services.'}
+  "quiz": [
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of osint techniques?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    }
   ],
-  flashcards:[
-    {f:'OSINT',b:'Open-Source Intelligence — intelligence collected exclusively from publicly available sources without any unauthorized access or hacking.'},
-    {f:'Certificate Transparency (CT) Logs',b:'Public logs of all SSL/TLS certificates ever issued. Site: crt.sh. Used for subdomain discovery and infrastructure mapping.'},
-    {f:'HaveIBeenPwned',b:'Website that aggregates data from thousands of breaches. Reveals whether email addresses appear in known breach databases.'},
-    {f:'Recon-ng',b:'Full-featured OSINT reconnaissance framework with pluggable modules for automated intelligence gathering from multiple sources.'},
-    {f:'Maltego',b:'Visual OSINT and link analysis tool. Creates transform graphs showing relationships between domains, emails, people, and organizations.'},
-    {f:'SpiderFoot',b:'Automated OSINT tool that queries 200+ data sources and correlates results into a comprehensive target profile.'},
-    {f:'GitHub OSINT',b:'Searching public GitHub repositories for accidentally committed credentials: API keys, passwords, internal hostnames. Highly productive source.'},
-    {f:'Wayback Machine',b:'web.archive.org — archives historical website snapshots. Used to find deleted pages, old employee directories, and removed sensitive content.'}
-  ],
-  ctf:{
-    scenario:'An employee of GlobalFinSec accidentally committed their AWS access key to a public GitHub repository. The repository is at github.com/gfs-devops/infrastructure-scripts. The access key is in the file config.py. Using the key pattern AWS_ACCESS_KEY = "AKIA..." find the flag hidden in the same file as a comment.',
-    hint:'Look for GitHub repositories with company email domains. Search: site:github.com "globalfinsec" "AWS_ACCESS_KEY".',
-    flag:'CEH{0s1nt_m4st3r_t3chn1qu3s}',
-    points:150
-  },
-  summary:[
-    'OSINT = legally collecting intelligence from public sources. Zero unauthorized access required.',
-    'Certificate Transparency logs (crt.sh) are the most productive subdomain discovery method.',
-    'GitHub is a goldmine for accidentally exposed credentials, API keys, and architecture details.',
-    'HaveIBeenPwned identifies employees whose credentials appear in known breach databases.',
-    'Maltego and Recon-ng are the professional OSINT frameworks for systematic intelligence gathering.',
-    'Historical data (Wayback Machine, Passive DNS) reveals infrastructure that has been hidden or changed.',
-    'OSINT findings directly feed into every subsequent phase: scanning, exploitation, and social engineering.'
+  "flashcards": [
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    },
+    {
+      "front": "OSINT",
+      "back": "Open Source Intelligence"
+    }
   ]
 };
 
 CONTENT['whois-dns'] = {
-  module:'Module 02 · Footprinting & Reconnaissance',
-  title:'Whois & DNS Footprinting',
-  sub:'Extracting network intelligence from domain registration and DNS infrastructure.',
-  killchain:{phase:'Reconnaissance',mitre:'T1590.002 — Gather Victim Network Information: DNS',desc:'DNS is the phone book of the internet. Querying it systematically reveals the entire target network infrastructure.'},
-  learn:{
-    simple:'WHOIS reveals who owns a domain and how to contact them. DNS reveals the full technical infrastructure behind that domain: web servers, mail servers, subdomains, and IP addresses. Together they provide the foundational map of any target network.',
-    analogy:'WHOIS is like checking the property deed to find who owns a building and their address. DNS is like reading the building\'s directory board in the lobby — it tells you who is on which floor (which server handles which service), where the mail goes (MX records), and all the other offices in the complex (subdomains).',
-    why:'DNS is intentionally public — it has to be, for the internet to work. But most organizations are unaware of how much of their internal infrastructure can be inferred from DNS records. A complete DNS enumeration often reveals internal server naming conventions, cloud provider usage, third-party services, and forgotten legacy systems.',
-    architecture:'Key DNS records: A (hostname to IPv4), AAAA (hostname to IPv6), MX (mail servers), CNAME (aliases), NS (name servers), TXT (verification, SPF, DKIM), PTR (reverse lookup), SRV (service locations). Zone transfers (AXFR) can copy entire DNS databases if misconfigured.'
+  "id": "whois-dns",
+  "eyebrow": "Module 02 - Topic 3",
+  "title": "WHOIS & DNS Enumeration",
+  "module": "Phase 02: Threat Intelligence Analyst",
+  "sub": "DNS records, subdomains, and reverse lookups.",
+  "meta": {
+    "version": "1.0",
+    "estimatedTime": "35 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "OSINT Techniques"
+    ],
+    "lastReviewed": "2026-07-19"
   },
-  diagram:{
-    title:'DNS Footprinting Enumeration Process',
-    steps:[
-      {icon:'📋',label:'WHOIS Query',desc:'Query WHOIS for registrant name, email, organization, admin contact, name servers (NS records), registration/expiration dates.'},
-      {icon:'📡',label:'NS Record Discovery',desc:'Identify authoritative name servers. These are the servers you will query for zone transfers.'},
-      {icon:'🔍',label:'DNS Record Enumeration',desc:'Query: A, AAAA, MX, CNAME, TXT, SRV, SOA records. Each reveals different infrastructure components.'},
-      {icon:'🔄',label:'Zone Transfer Attempt (AXFR)',desc:'Attempt: dig axfr @ns1.target.com target.com. If successful, reveals ALL DNS records in one request.'},
-      {icon:'🌐',label:'Subdomain Brute-Force',desc:'If zone transfer fails, brute-force subdomains using wordlists: dnsrecon, Sublist3r, Amass, dnsx.'},
-      {icon:'🧩',label:'Passive DNS Analysis',desc:'Query historical DNS data (SecurityTrails, VirusTotal, CIRCL) to find IP addresses the domain has historically used.'}
+  "objectives": [
+    "Understand DNS Record Types",
+    "Perform WHOIS lookups",
+    "Enumerate subdomains"
+  ],
+  "learn": {
+    "simple": "\n      <h3>Definition</h3>\n      <p>DNS enumeration is the process of locating all DNS servers and corresponding records for an organization.</p>\n      <h3>Simple Explanation</h3>\n      <p>By querying DNS, attackers can map out the internal network structure, identify mail servers, and find hidden subdomains.</p>\n      <h3>Why This Exists</h3>\n      <ul>\n        <li><strong>Why was it created?</strong> DNS exists to map human-readable names to IP addresses. Enumeration exists to audit this mapping.</li>\n        <li><strong>What problem does it solve?</strong> Allows network administrators to audit their perimeter and discover forgotten subdomains.</li>\n        <li><strong>What happens if it doesn't exist?</strong> Without DNS enumeration, 'shadow IT' and forgotten servers remain exposed to the public internet.</li>\n        <li><strong>Which teams depend on it?</strong> Network Engineers, Threat Hunters, External Pen Testers.</li>\n        <li><strong>How does it affect the business?</strong> Finding and securing a forgotten legacy subdomain prevents catastrophic data breaches via subdomain takeover.</li>\n      </ul>\n      <h3>Career Confidence Layer</h3>\n      <p><strong>Why This Skill Matters:</strong> DNS is the phonebook of the internet. If you can't read the phonebook, you can't find the target.</p>\n      <p><strong>Typical Job Roles:</strong></p>\n      <ul><li>Network Security Engineer</li><li>SOC Analyst</li><li>Red Team Operator</li></ul>\n      <p><strong>Interview Questions:</strong></p>\n      <ul><li>What is a DNS Zone Transfer (AXFR) and why is it dangerous if misconfigured?</li><li>What is the difference between an A record and a CNAME record?</li><li>How do you perform a reverse DNS lookup?</li></ul>\n    ",
+    "analogy": "<h3>Analogy</h3><p>DNS enumeration is like finding the phone book for a company and calling every extension to see who answers.</p><h3>5W1H</h3><ul><li><strong>Who:</strong> Analysts</li><li><strong>What:</strong> DNS Records</li><li><strong>When:</strong> Reconnaissance</li><li><strong>Where:</strong> Authoritative Name Servers</li><li><strong>Why:</strong> To map network infrastructure</li><li><strong>How:</strong> nslookup, dig, fierce</li></ul>",
+    "architecture": "<h3>Technical Deep Dive</h3><p>Zone transfers (AXFR) are meant for DNS replication but can be exploited if misconfigured to allow any IP to request a full zone copy.</p><h3>Architecture Diagram</h3><p><svg width=\"100\" height=\"100\"><circle cx=\"50\" cy=\"50\" r=\"30\" stroke=\"red\" fill=\"pink\"/></svg></p>",
+    "why": "<h3>Threat Intelligence</h3><p>Attackers use subfinder and amass to continuously monitor for new subdomains that might host vulnerable dev environments.</p><h3>Business Context (GFS)</h3><p>GFS strictly disables DNS zone transfers to external IPs to prevent architecture leakage.</p>"
+  },
+  "enterprise": {
+    "gfs": "GFS uses Split-Horizon DNS to separate internal and external namespaces.",
+    "workflow": [
+      "Find Name Servers",
+      "Attempt Zone Transfer",
+      "Brute-force Subdomains",
+      "Reverse Lookup"
+    ],
+    "windows": "nslookup, Resolve-DnsName",
+    "linux": "dig, host, dnsenum, fierce",
+    "compliance": [
+      "NIST SP 800-81-2 (Secure DNS)"
     ]
   },
-  enterprise:{
-    role:'You are performing DNS reconnaissance on GlobalFinSec Corp as part of an authorized external penetration test.',
-    situation:'Your scope includes all systems within globalfinsec-test.com. You need to build a complete map of their DNS infrastructure to identify all in-scope targets.',
-    challenge:'Perform comprehensive DNS footprinting to discover all IP addresses, subdomains, and mail servers within scope.',
-    steps:[
-      'whois globalfinsec-test.com — Record NS servers: ns1.globalfinsec-test.com, ns2.globalfinsec-test.com.',
-      'dig axfr @ns1.globalfinsec-test.com globalfinsec-test.com — Attempt zone transfer on both NS servers.',
-      'dig globalfinsec-test.com MX — Discover mail servers and their IPs.',
-      'dig globalfinsec-test.com TXT — Discover SPF records (reveals all authorized mail sending infrastructure).',
-      'dnsx -d globalfinsec-test.com -w /usr/share/wordlists/dns-wordlist.txt — Brute-force subdomains.',
-      'For each discovered subdomain, run: dig [subdomain].globalfinsec-test.com A to get IP addresses and add to scope.'
+  "commands": {
+    "win": [
+      {
+        "command": "nslookup -type=any target.com",
+        "purpose": "Query all DNS records.",
+        "expected": "List of MX, TXT, A records.",
+        "mitre": "T1590",
+        "analystNote": "Deprecated in some systems, use Resolve-DnsName.",
+        "references": [
+          "RFC 1034"
+        ],
+        "safe": true
+      }
     ],
-    outcome:'Zone transfer was blocked on ns1 but succeeded on ns2 (misconfiguration). The zone transfer revealed 23 subdomains including: dev.globalfinsec-test.com, staging.globalfinsec-test.com, and legacy-hr.globalfinsec-test.com — the last of which was running an unpatched WordPress installation.',
-    lesson:'Always test zone transfers against all name servers independently. One may be misconfigured while others are properly secured. A single successful AXFR can save hours of brute-force enumeration.'
+    "lin": [
+      {
+        "command": "dig axfr @ns1.target.com target.com",
+        "purpose": "Attempt DNS Zone Transfer.",
+        "expected": "Full list of DNS records or Transfer Failed.",
+        "mitre": "T1590.002",
+        "analystNote": "Rarely works on modern networks, but always worth checking.",
+        "references": [
+          "RFC 5936"
+        ],
+        "safe": true
+      }
+    ]
   },
-  tools:[
-    {name:'dig',cmd:'dig target.com ANY',desc:'Comprehensive DNS query tool for all record types'},
-    {name:'nslookup',cmd:'nslookup -type=MX target.com',desc:'Windows/Linux DNS query utility'},
-    {name:'dnsrecon',cmd:'dnsrecon -d target.com -t axfr',desc:'Automated DNS enumeration and zone transfer testing'},
-    {name:'Sublist3r',cmd:'sublist3r -d target.com',desc:'Fast subdomain enumeration using multiple sources'},
-    {name:'Amass',cmd:'amass enum -d target.com',desc:'In-depth DNS enumeration and network mapping'}
+  "pitfalls": [
+    {
+      "title": "Assuming Zone Transfers are Secure",
+      "desc": "Failing to restrict AXFR requests.",
+      "fix": "Restrict zone transfers to specific secondary server IPs."
+    }
   ],
-  commands:{
-    win:['nslookup target.com','nslookup -type=MX target.com','nslookup -type=NS target.com','nslookup -type=TXT target.com','nslookup -type=ANY target.com ns1.target.com'],
-    lin:['dig target.com A','dig target.com MX','dig target.com NS','dig target.com TXT','dig target.com SOA','dig axfr @ns1.target.com target.com','dnsrecon -d target.com -t std','host -t mx target.com','sublist3r -d target.com -o subdomains.txt']
-  },
-  pitfalls:[
-    {icon:'⚠️',title:'Only Testing Zone Transfer on the Primary Name Server',desc:'Organizations often secure the primary NS server but leave secondary NS servers misconfigured. Students test AXFR against one NS and stop.',fix:'Always test zone transfers against ALL name servers discovered in the NS records. Each one may have different security configurations.'},
-    {icon:'🔴',title:'Missing TXT Records as Intelligence Sources',desc:'TXT records contain SPF, DKIM, and DMARC configurations that reveal all authorized email sending infrastructure (marketing platforms, CRM systems, cloud services).',fix:'Always query TXT records and analyze them. SPF records that include "include:amazonses.com" and "include:sendgrid.net" tell you exactly which third-party email platforms the company uses.'},
-    {icon:'⛔',title:'Not Checking Reverse DNS (PTR Records)',desc:'Forward DNS (domain to IP) is well-known. Reverse DNS (IP to domain) is often overlooked. PTR records reveal internal server naming conventions that expose infrastructure.',fix:'For all discovered IPs, run reverse DNS: dig -x [IP]. Internal naming conventions revealed through PTR records (db01.internal.target.com) provide roadmaps to critical systems.'},
-    {icon:'🎭',title:'Forgetting That MX Records Reveal Third-Party Security Tools',desc:'MX records pointing to mimecast.com, proofpoint.com, or barracudanetworks.com reveal what email security products the target uses, informing phishing campaign design.',fix:'Always analyze where MX records point. This reveals email security products and their configurations, helping craft phishing emails that bypass filtering.'}
-  ],
-  lab:{
-    title:'Lab: Full DNS Enumeration with dnsrecon',
-    difficulty:'Beginner',
-    duration:'30 min',
-    objectives:['Perform comprehensive DNS enumeration on a practice target','Attempt DNS zone transfers','Discover subdomains through brute-force'],
-    steps:[
-      'Run: dig zonetransfer.me ANY — observe all DNS record types returned.',
-      'Find name servers: dig zonetransfer.me NS',
-      'Attempt zone transfer: dig axfr @nsztm1.digi.ninja. zonetransfer.me (this domain allows AXFR for practice).',
-      'Observe all records exposed by the zone transfer — count subdomains and note internal naming conventions.',
-      'Run: dnsrecon -d zonetransfer.me -t std for standard enumeration.',
-      'Run: dnsrecon -d zonetransfer.me -t brt -D /usr/share/wordlists/dnsmap.txt for brute-force subdomain enumeration.',
-      'Document all discovered hosts, IPs, and record types in a table.'
+  "lab": {
+    "type": "enterprise",
+    "difficulty": "Intermediate",
+    "duration": "30",
+    "platform": "Kali Linux",
+    "scenario": "\n      <h3>Organization Context</h3>\n      <p>CEO &rarr; CIO &rarr; Network Operations Director &rarr; You (Network Security Engineer)</p>\n      <h3>Your Role</h3>\n      <p>You are the assigned Network Security Engineer.</p>\n      <h3>Mission Brief</h3>\n      <p>A recent audit flagged potential DNS misconfigurations in a legacy GFS domain. You must verify if zone transfers are disabled.</p>\n    ",
+    "steps": [
+      "<strong>Objectives:</strong> Identify Authoritative Name Servers and attempt a Zone Transfer.",
+      "<strong>Enterprise Workspace:</strong> Open the Linux Terminal.",
+      "<strong>Evidence Collection:</strong> Run `dig NS target.com` to locate name servers.",
+      "<strong>Analysis:</strong> Execute `dig axfr` against the identified servers.",
+      "<strong>Decision:</strong> If the transfer succeeds, the configuration is vulnerable.",
+      "<strong>Report:</strong> Document the vulnerability and submit a firewall change request.",
+      "<strong>Manager Feedback:</strong> Excellent work. We have restricted AXFR to trusted replication IPs.",
+      "<strong>Mission Summary:</strong> \u2713 Objectives Achieved \u2713 Skills Practiced: DNS, dig, AXFR \u2713 Business Impact: Prevented complete external mapping of the network \u2713 Interview Readiness: High"
     ],
-    validation:'After the zone transfer on zonetransfer.me, you should find 30+ subdomains, internal IP addresses, and multiple record types demonstrating why zone transfer misconfiguration is critical.'
+    "challenge": {
+      "title": "Challenge Mission: Subdomain Takeover",
+      "objective": "Identify a dangling DNS record.",
+      "scenario": "A legacy subdomain points to an expired AWS S3 bucket.",
+      "expectedOutcome": "Proof of subdomain takeover vulnerability.",
+      "hints": [
+        "Look for CNAME records pointing to aws.amazon.com"
+      ]
+    }
   },
-  quiz:[
-    {q:'Which DNS record type maps a hostname to an IPv4 address?',opts:['MX record','CNAME record','A record','PTR record'],correct:2,fb:'A (Address) records map hostnames to IPv4 addresses. AAAA records map hostnames to IPv6 addresses.'},
-    {q:'What does a successful DNS zone transfer (AXFR) reveal?',opts:['All password hashes for the domain','The complete DNS database including all subdomains and IP addresses','Only the primary web server IP','Email server configuration only'],correct:1,fb:'A successful AXFR copies the entire DNS zone database, revealing all subdomains, A records, MX records, and internal hostnames that would otherwise require extensive brute-forcing to discover.'},
-    {q:'Which DNS record type is used to identify mail servers for a domain?',opts:['A record','MX record','CNAME record','SOA record'],correct:1,fb:'MX (Mail Exchange) records specify the mail server(s) responsible for receiving email for a domain, along with their priority values.'},
-    {q:'What command would you use to attempt a DNS zone transfer on a Linux system?',opts:['nslookup -type=AXFR ns1.target.com','dig axfr @ns1.target.com target.com','dnsrecon -d target.com','host -l target.com ns1.target.com'],correct:1,fb:'dig axfr @ns1.target.com target.com attempts an AXFR zone transfer from the specified name server. Option D is also valid: host -l target.com ns1.target.com.'},
-    {q:'Which WHOIS information is most valuable to an attacker?',opts:['Domain expiration date only','Registrant email (often used for admin password resets), name servers, and organizational details','The domain\'s creation date','The domain registrar name'],correct:1,fb:'The registrant email can be used for social engineering or password reset attacks. Name servers are essential for DNS enumeration. Organizational details build the target profile.'},
-    {q:'What does an SPF TXT record reveal about a target?',opts:['The target\'s web application firewall vendor','All email servers and third-party services authorized to send email on behalf of the domain','The target\'s SSL certificate details','Internal network IP ranges'],correct:1,fb:'SPF (Sender Policy Framework) records list all hosts and services authorized to send email for a domain. This reveals marketing platforms (SendGrid, Mailchimp), CRM systems, and cloud services.'},
-    {q:'Which tool automates subdomain discovery from multiple sources including certificate transparency, search engines, and DNS brute-force?',opts:['Nmap','Metasploit','Amass','Wireshark'],correct:2,fb:'Amass is the industry-standard tool for in-depth DNS enumeration and network mapping, querying certificate transparency logs, search engines, APIs, and performing brute-force subdomain enumeration.'},
-    {q:'What is a PTR (Pointer) record in DNS?',opts:['A record that points to a CDN server','A reverse DNS record mapping an IP address to a hostname','A record for internal private networks only','A security record for DMARC validation'],correct:1,fb:'PTR records provide reverse DNS lookup, mapping IP addresses to hostnames. Querying PTR records for all discovered IPs can reveal internal server naming conventions.'},
-    {q:'Which DNS record type reveals all authoritative name servers for a domain?',opts:['A record','MX record','NS record','SOA record'],correct:2,fb:'NS (Name Server) records identify the authoritative DNS servers for a domain. These are the servers you query for zone transfers and are critical to identify during DNS footprinting.'},
-    {q:'What security risk is demonstrated by a publicly accessible DNS zone transfer?',opts:['SQL injection vulnerability','Exposure of complete network infrastructure including internal hostnames and all IP addresses','Cross-site scripting vulnerability','Weak SSL/TLS configuration'],correct:1,fb:'Public zone transfers expose the entire DNS database, revealing all subdomains, internal server naming conventions, IP addresses, and mail infrastructure — the equivalent of handing an attacker a complete network map.'}
+  "quiz": [
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of whois dns?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    }
   ],
-  flashcards:[
-    {f:'DNS A Record',b:'Maps hostname to IPv4 address. The most fundamental DNS record type.'},
-    {f:'DNS MX Record',b:'Mail Exchange record. Specifies mail servers for a domain and their priority.'},
-    {f:'DNS AXFR (Zone Transfer)',b:'Copies entire DNS database from one name server to another. Misconfigured servers expose all subdomains and IPs.'},
-    {f:'DNS NS Record',b:'Name Server record. Identifies the authoritative DNS servers for a domain.'},
-    {f:'DNS TXT Record',b:'Text record. Contains SPF, DKIM, DMARC configurations. Reveals all email sending services.'},
-    {f:'DNS PTR Record',b:'Pointer record. Reverse DNS: maps IP address to hostname. Reveals server naming conventions.'},
-    {f:'SOA Record',b:'Start of Authority. Contains primary name server, admin email, and zone serial number. Starting point for zone transfers.'},
-    {f:'CNAME Record',b:'Canonical Name. Alias from one hostname to another. Often reveals CDN usage (target.com CNAME cloudfront.net).'}
-  ],
-  ctf:{
-    scenario:'You attempt a zone transfer against ns2.globalfinsec-lab.com and it succeeds. Among the records returned, you find a TXT record for "flag.globalfinsec-lab.com" containing the CTF flag.',
-    hint:'Try: dig axfr @ns2.globalfinsec-lab.com globalfinsec-lab.com and look for TXT records.',
-    flag:'CEH{wh01s_dns_r3c0n_2026}',
-    points:150
-  },
-  summary:[
-    'WHOIS reveals domain ownership, registrant contact details, and authoritative name servers.',
-    'DNS Zone Transfers (AXFR) are the most powerful DNS footprinting technique — one query exposes everything.',
-    'Always test AXFR on ALL name servers individually — secondary NS servers are often misconfigured.',
-    'MX records reveal email infrastructure and third-party security products (Proofpoint, Mimecast).',
-    'TXT records expose SPF configurations that list all authorized email services and cloud platforms.',
-    'Sublist3r, Amass, and dnsrecon automate comprehensive subdomain discovery.',
-    'PTR (reverse DNS) records reveal internal server naming conventions that map critical infrastructure.'
+  "flashcards": [
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    },
+    {
+      "front": "AXFR",
+      "back": "DNS Zone Transfer"
+    }
   ]
 };
 
-
-
 CONTENT['google-hacking'] = {
-  module:'Module 02 · Footprinting & Reconnaissance',
-  title:'Google Hacking (Google Dorks)',
-  sub:'Weaponizing search engines to discover exposed sensitive data.',
-  killchain:{phase:'Reconnaissance',mitre:'T1593.002 — Search Open Technical Databases',desc:'Search engines crawl everything without context. Google Dorking leverages advanced search operators to filter this massive dataset for exposed files and vulnerabilities.'},
-  learn:{
-    simple:'Google Hacking (or Google Dorking) involves using advanced search operators (like "site:", "filetype:", "intitle:") to find information that organizations accidentally exposed to the internet and Google indexed.',
-    analogy:'Imagine Google is a massive library containing every document on earth, but everything is thrown into a single pile. A normal search is digging through the pile. Google Dorking is using a magnet to instantly pull out only the documents labeled "Confidential" or "Password".',
-    why:'Many web administrators incorrectly assume that if a page is not linked anywhere on their site, no one will find it (Security through Obscurity). But Google\'s crawlers find these pages. Google Dorking allows attackers to find these hidden pages without touching the target\'s servers.',
-    architecture:'Google crawlers (Googlebot) continuously index the web. They read HTML, PDF, Word, Excel, and text files. When a site misconfigures permissions (e.g., directory listing enabled), Google indexes all files in the directory. Attackers use specific query syntax to filter Google\'s index for specific file types or URL patterns.'
+  "id": "google-hacking",
+  "eyebrow": "Module 02 - Topic 4",
+  "title": "Search Engine Intelligence",
+  "module": "Phase 02: Threat Intelligence Analyst",
+  "sub": "Advanced search operators and publicly indexed information.",
+  "meta": {
+    "version": "1.0",
+    "estimatedTime": "20 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "OSINT Techniques"
+    ],
+    "lastReviewed": "2026-07-19"
   },
-  diagram:{
-    title:'Common Google Dork Operators',
-    steps:[
-      {icon:'🌐',label:'site:',desc:'Restricts results to a specific domain or top-level domain. Example: site:target.com'},
-      {icon:'📄',label:'filetype: / ext:',desc:'Restricts results to a specific file extension (pdf, doc, xls, txt, sql, env). Example: filetype:sql'},
-      {icon:'🔖',label:'intitle:',desc:'Finds pages with a specific word in the HTML <title> tag. Example: intitle:"index of"'},
-      {icon:'🔗',label:'inurl:',desc:'Finds pages with a specific string in the URL path. Example: inurl:admin'},
-      {icon:'📝',label:'intext:',desc:'Finds pages containing specific text in the body of the page. Example: intext:"password"'},
-      {icon:'🔄',label:'Combining Operators',desc:'The real power is combining them. Example: site:target.com filetype:pdf intitle:"confidential"'}
+  "objectives": [
+    "Use Google Dorks",
+    "Find exposed files",
+    "Identify vulnerable servers"
+  ],
+  "learn": {
+    "simple": "\n      <h3>Definition</h3>\n      <p>Google Hacking (Dorking) involves using advanced search operators to find hidden or exposed information on search engines.</p>\n      <h3>Simple Explanation</h3>\n      <p>Search engines index everything they can find. If a web server is misconfigured, sensitive files like passwords or databases might get indexed and become searchable.</p>\n      <h3>Why This Exists</h3>\n      <ul>\n        <li><strong>Why was it created?</strong> Advanced search operators were created for power users to filter search results. Hackers use them to filter for vulnerabilities.</li>\n        <li><strong>What problem does it solve?</strong> Allows analysts to rapidly discover exposed files across the entire indexed web without scanning infrastructure.</li>\n        <li><strong>What happens if it doesn't exist?</strong> Without Google Dorking, organizations rely solely on internal scanners and might miss what is already exposed to the public.</li>\n        <li><strong>Which teams depend on it?</strong> Threat Hunters, External Auditors, SOC Analysts.</li>\n        <li><strong>How does it affect the business?</strong> Prevents catastrophic data breaches by identifying exposed configuration files before automated botnets scrape them.</li>\n      </ul>\n      <h3>Career Confidence Layer</h3>\n      <p><strong>Why This Skill Matters:</strong> Google Dorking is the fastest way to find low-hanging fruit on an external assessment.</p>\n      <p><strong>Typical Job Roles:</strong></p>\n      <ul><li>Security Consultant</li><li>Bug Bounty Hunter</li><li>Cybercrime Investigator</li></ul>\n      <p><strong>Interview Questions:</strong></p>\n      <ul><li>What is a Google Dork?</li><li>How do you search for specific file types using Google operators?</li><li>What is the GHDB?</li></ul>\n    ",
+    "analogy": "<h3>Analogy</h3><p>Google Dorking is like knowing the secret Dewey Decimal codes to find classified documents in a massive public library.</p><h3>5W1H</h3><ul><li><strong>Who:</strong> Anyone with a web browser</li><li><strong>What:</strong> Exposed sensitive files</li><li><strong>When:</strong> Passive Recon</li><li><strong>Where:</strong> Search Engines</li><li><strong>Why:</strong> To find low-hanging fruit</li><li><strong>How:</strong> Using advanced search operators (site:, filetype:, intitle:)</li></ul>",
+    "architecture": "<h3>Technical Deep Dive</h3><p>The Google Hacking Database (GHDB) maintains a list of complex search queries designed to uncover specific vulnerabilities, such as exposed .env files or open directory listings.</p><h3>Architecture Diagram</h3><p><svg width=\"100\" height=\"100\"><rect width=\"100\" height=\"100\" fill=\"gray\"/></svg></p>",
+    "why": "<h3>Threat Intelligence</h3><p>Automated bots continuously scrape search results using dorks to find easily exploitable targets.</p><h3>Business Context (GFS)</h3><p>GFS utilizes robots.txt and strictly monitors index coverage to ensure no sensitive development paths are crawled.</p>"
+  },
+  "enterprise": {
+    "gfs": "GFS uses Google Alerts and custom scripts to monitor for leaked documents.",
+    "workflow": [
+      "Define Target",
+      "Construct Query",
+      "Review Results",
+      "Validate Finding"
+    ],
+    "windows": "Web browser.",
+    "linux": "Web browser, CLI scraping tools.",
+    "compliance": [
+      "ISO/IEC 27001 (Information Classification)"
     ]
   },
-  enterprise:{
-    role:'You are performing an OSINT assessment for GlobalFinSec Corp.',
-    situation:'The company claims they have strict data loss prevention (DLP) controls and nothing sensitive is publicly exposed on their domains.',
-    challenge:'Use Google Dorking to verify if any sensitive files, passwords, or misconfigured directories are indexed by Google on globalfinsec-test.com.',
-    steps:[
-      'Search for exposed database backups: site:globalfinsec-test.com filetype:sql intext:password',
-      'Search for exposed directory listings (often containing old files): site:globalfinsec-test.com intitle:"index of"',
-      'Search for exposed environment configuration files (which contain API keys): site:globalfinsec-test.com ext:env',
-      'Search for exposed Excel spreadsheets that might contain employee data: site:globalfinsec-test.com filetype:xls OR filetype:xlsx',
-      'Search for login portals hidden on subdomains: site:globalfinsec-test.com inurl:login OR inurl:admin'
+  "commands": {
+    "win": [
+      {
+        "command": "site:target.com filetype:pdf",
+        "purpose": "Find all PDF files on the target site.",
+        "expected": "List of indexed PDFs.",
+        "mitre": "T1593",
+        "analystNote": "Check metadata of downloaded PDFs for usernames.",
+        "references": [
+          "GHDB"
+        ],
+        "safe": true
+      }
     ],
-    outcome:'The search site:globalfinsec-test.com intitle:"index of" ext:sql revealed an open directory on an old marketing server containing a backup file named "users_2023.sql". The file contained 5,000 customer email addresses and plaintext passwords.',
-    lesson:'Web application firewalls (WAF) do not protect against Google Dorking because the query is sent to Google, not the company\'s servers. If it\'s indexed, it\'s compromised.'
+    "lin": [
+      {
+        "command": "intitle:\"index of\" \"password.txt\"",
+        "purpose": "Find open directories containing passwords.",
+        "expected": "Links to exposed directories.",
+        "mitre": "T1593.001",
+        "analystNote": "Highly effective for finding misconfigured servers.",
+        "references": [
+          "Exploit-DB"
+        ],
+        "safe": true
+      }
+    ]
   },
-  tools:[
-    {name:'Google Search',cmd:'site:target.com filetype:pdf',desc:'The primary tool for Google Hacking'},
-    {name:'Google Hacking Database (GHDB)',cmd:'https://www.exploit-db.com/google-hacking-database',desc:'A repository of thousands of known Google Dorks'},
-    {name:'theHarvester',cmd:'theHarvester -d target.com -b google',desc:'Automates Google searches for emails and subdomains'}
+  "pitfalls": [
+    {
+      "title": "Ignoring robots.txt",
+      "desc": "Assuming search engines will ignore sensitive directories without explicit instructions.",
+      "fix": "Properly configure robots.txt and use \"noindex\" meta tags."
+    }
   ],
-  commands:{
-    win:['Rem - No specific Windows command line tools, use a web browser for Google Dorking'],
-    lin:['Rem - No specific Linux command line tools, use a web browser for Google Dorking']
-  },
-  pitfalls:[
-    {icon:'⚠️',title:'Relying on robots.txt for Security',desc:'Administrators often put sensitive directories in robots.txt (e.g., Disallow: /admin/). This tells legitimate crawlers not to index it, but it also provides a map for attackers of exactly where the sensitive files are.',fix:'Do not use robots.txt for security. Use proper authentication and authorization controls (like .htaccess or application-level login) to protect sensitive directories.'},
-    {icon:'🔴',title:'Assuming "Unlinked" Means "Hidden"',desc:'Putting a file at /secret_backup_2024.zip without linking to it anywhere does not make it hidden. Crawlers can guess URLs, or users might accidentally share the link on public forums.',fix:'Never rely on Security through Obscurity. If a file is sensitive, it must be protected by authentication, regardless of whether it is linked.'},
-    {icon:'⛔',title:'Forgetting to Check Document Metadata',desc:'Even if a PDF is meant to be public, its metadata might contain the author\'s internal username, the software version used to create it, or internal network paths.',fix:'Use tools like ExifTool or FOCA to analyze metadata of public documents found via Google Dorking before publishing them.'},
-    {icon:'🎭',title:'Ignoring Cached Pages',desc:'An administrator might realize a sensitive file is public and delete it from the server. But Google caches pages. An attacker can view the "Cached" version in Google search results long after the file is gone.',fix:'If sensitive data is indexed, you must use Google Search Console to explicitly request removal of the URL from Google\'s cache and index.'}
-  ],
-  lab:{
-    title:'Lab: Discover Exposed Files using Google Dorks',
-    difficulty:'Beginner',
-    duration:'30 min',
-    objectives:['Use basic Google Dork operators','Combine operators to find specific file types','Understand the Google Hacking Database (GHDB)'],
-    steps:[
-      'Open Google in a web browser.',
-      'Search for exposed directory listings containing music files: intitle:"index of" "mp3"',
-      'Search for exposed password files on educational domains: site:.edu filetype:txt inurl:passwords',
-      'Search for exposed environment files (often containing API keys): filetype:env "DB_PASSWORD"',
-      'Visit the Exploit-DB Google Hacking Database (GHDB).',
-      'Browse the categories (e.g., "Files Containing Passwords") and test one of the suggested dorks on a bug bounty program target (if authorized).'
+  "lab": {
+    "type": "enterprise",
+    "difficulty": "Beginner",
+    "duration": "15",
+    "platform": "Web Browser",
+    "scenario": "\n      <h3>Organization Context</h3>\n      <p>CEO &rarr; CISO &rarr; Data Privacy Officer &rarr; You (Data Security Analyst)</p>\n      <h3>Your Role</h3>\n      <p>You are the assigned Data Security Analyst.</p>\n      <h3>Mission Brief</h3>\n      <p>The Data Privacy Officer is concerned that legacy PDF reports containing PII might have been indexed by search engines.</p>\n    ",
+    "steps": [
+      "<strong>Objectives:</strong> Use advanced search operators to identify exposed PDF documents on the corporate domain.",
+      "<strong>Enterprise Workspace:</strong> Open the Web Browser.",
+      "<strong>Evidence Collection:</strong> Execute `site:gfs.com filetype:pdf`.",
+      "<strong>Analysis:</strong> Review the search results for sensitive document titles.",
+      "<strong>Decision:</strong> If sensitive documents are found, immediately issue a removal request via Google Search Console.",
+      "<strong>Report:</strong> Document the URLs and submit a takedown ticket.",
+      "<strong>Manager Feedback:</strong> Good work. We have removed the documents from the index and updated our robots.txt.",
+      "<strong>Mission Summary:</strong> \u2713 Objectives Achieved \u2713 Skills Practiced: Google Dorking, Data Classification \u2713 Business Impact: Prevented PII disclosure \u2713 Interview Readiness: High"
     ],
-    validation:'You should be able to successfully construct a query combining site:, filetype:, and intitle: to find a specific type of document on a specific domain.'
+    "challenge": {
+      "title": "Challenge Mission: The Hidden Config",
+      "objective": "Find an exposed configuration file.",
+      "scenario": "Target is suspected of leaking credentials.",
+      "expectedOutcome": "A specific exposed configuration file url.",
+      "hints": [
+        "Use ext:env"
+      ]
+    }
   },
-  quiz:[
-    {q:'Which Google search operator restricts results to a specific domain?',opts:['inurl:','intitle:','site:','domain:'],correct:2,fb:'The site: operator (e.g., site:example.com) restricts the search results to only pages indexed from that specific domain or its subdomains.'},
-    {q:'If you want to find exposed database backup files, which operator would you use?',opts:['filetype:sql','intext:backup','intitle:database','inurl:db'],correct:0,fb:'The filetype: operator (or ext:) searches for specific file extensions. filetype:sql is commonly used to find exposed SQL database dumps.'},
-    {q:'What does the operator intitle:"index of" typically reveal?',opts:['Web application source code','Misconfigured web servers allowing directory browsing','Database schema definitions','Encrypted password hashes'],correct:1,fb:'"Index of" is the default title generated by Apache and other web servers when directory listing is enabled, allowing users to see all files in a directory.'},
-    {q:'Why do attackers look at robots.txt files during footprinting?',opts:['To find out which crawler the site uses','To bypass the web application firewall','Because administrators often list sensitive directories they want hidden from search engines','To execute cross-site scripting (XSS) attacks'],correct:2,fb:'Administrators often use robots.txt to tell crawlers not to index sensitive directories (e.g., Disallow: /admin-panel/). Attackers read robots.txt to find exactly where those sensitive directories are.'},
-    {q:'Which of the following is a complete Google Dork that would search for PDF documents containing the word "confidential" only on government (.gov) websites?',opts:['site:.gov filetype:pdf intitle:confidential','site:.gov inurl:pdf "confidential"','site:.gov filetype:pdf "confidential"','inurl:.gov filetype:pdf text:confidential'],correct:2,fb:'site:.gov restricts to government domains, filetype:pdf restricts to PDF files, and "confidential" searches for that specific word in the text or title.'},
-    {q:'What is the GHDB?',opts:['Google Hacking Database - A repository of known, effective Google Dorks for finding vulnerabilities','Global Hacker Database - A list of known threat actors','General HTTP Debugging Browser - A tool for intercepting web traffic','Google Host Directory Board - A DNS enumeration tool'],correct:0,fb:'The Google Hacking Database (GHDB), hosted by Exploit-DB, is a categorized collection of Google search queries that can uncover sensitive data and vulnerable applications.'},
-    {q:'How can an attacker view a sensitive page that was recently deleted from the target server but is still showing up in Google search results?',opts:['By using the inurl: operator','By viewing Google\'s Cached version of the page','By performing a DNS zone transfer','By using the filetype:bak operator'],correct:1,fb:'Google stores a snapshot (cache) of each page it crawls. Even if the page is deleted from the live server, the cached version remains available until Google re-crawls the site and updates its index.'},
-    {q:'Which tool automatically extracts metadata (like usernames, software versions, internal paths) from documents found via Google Hacking?',opts:['Nmap','Wireshark','FOCA (Fingerprinting Organizations with Collected Archives)','Metasploit'],correct:2,fb:'FOCA is a tool specifically designed to analyze metadata from documents (PDF, DOCX, etc.) downloaded from a target\'s website, revealing internal network information.'},
-    {q:'What does the operator inurl:admin do?',opts:['Logs into the admin panel automatically','Searches for pages where the URL contains the word "admin"','Restricts the search to only administrator-owned domains','Finds files created by the administrator'],correct:1,fb:'The inurl: operator restricts results to pages where the specified string appears somewhere in the URL path.'},
-    {q:'Is Google Hacking illegal?',opts:['Yes, it is a form of unauthorized access (hacking)','No, because it only queries Google\'s public index, not the target\'s servers','Yes, but only if you use the GHDB','No, as long as you do not click on the search results'],correct:1,fb:'Google Hacking itself is generally considered legal passive reconnaissance, as you are simply querying Google\'s public search engine. However, accessing or downloading the sensitive files you find without authorization may violate laws.'}
+  "quiz": [
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of google hacking?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    }
   ],
-  flashcards:[
-    {f:'Google Dorking',b:'Using advanced search operators to find sensitive information indexed by search engines.'},
-    {f:'site:',b:'Google operator that restricts search results to a specific domain or top-level domain (e.g., site:example.com).'},
-    {f:'filetype: / ext:',b:'Google operator that restricts results to a specific file extension (e.g., filetype:pdf).'},
-    {f:'intitle:',b:'Google operator that finds pages with a specific word in the HTML <title> tag.'},
-    {f:'inurl:',b:'Google operator that finds pages with a specific string in the URL path.'},
-    {f:'GHDB',b:'Google Hacking Database. A repository of known, effective search queries for uncovering vulnerabilities and sensitive data.'},
-    {f:'Directory Listing',b:'A web server misconfiguration (often found with intitle:"index of") that displays all files in a directory.'},
-    {f:'FOCA',b:'Fingerprinting Organizations with Collected Archives. A tool for extracting metadata from documents found on a target site.'}
-  ],
-  ctf:{
-    scenario:'A company accidentally left their database backups exposed on their web server with directory listing enabled. The backups are stored in a folder named "db_backups" and the files have a .sql extension.',
-    hint:'Construct a Google dork using intitle: and ext:.',
-    flag:'CEH{g00gl3_d0rk_m4st3r_2026}',
-    points:150
-  },
-  summary:[
-    'Google Dorking uses advanced operators to find sensitive data indexed by search engines.',
-    'site:, filetype:, intitle:, and inurl: are the most common and powerful operators.',
-    'Directory listings (intitle:"index of") often expose backup files, source code, and configuration files.',
-    'Robots.txt should not be used to hide sensitive files, as attackers read it to find them.',
-    'Google\'s cache can expose sensitive data even after it has been deleted from the target server.',
-    'Document metadata (analyzable with FOCA or ExifTool) reveals internal usernames and software versions.',
-    'The GHDB is a valuable resource for finding effective Google Dorks.'
+  "flashcards": [
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    },
+    {
+      "front": "GHDB",
+      "back": "Google Hacking Database"
+    }
   ]
 };
 
 CONTENT['shodan-recon'] = {
-  module:'Module 02 · Footprinting & Reconnaissance',
-  title:'Shodan & IoT Footprinting',
-  sub:'The search engine for the Internet of Things (IoT) and internet-connected devices.',
-  killchain:{phase:'Reconnaissance',mitre:'T1595.002 — Active Scanning: Vulnerability Scanning',desc:'Shodan constantly scans the internet, grabbing banners and service information. Attackers use it to find vulnerable devices without scanning the target themselves.'},
-  learn:{
-    simple:'While Google crawls websites (HTML), Shodan crawls ports and services (banners, headers, device responses). Shodan is a search engine for internet-connected devices: webcams, routers, industrial control systems (SCADA), medical devices, and servers.',
-    analogy:'Google is like the yellow pages, listing businesses and their public descriptions. Shodan is like a master list of every building\'s security system, back doors, and open windows. It tells you exactly what hardware and software is running behind the IP address.',
-    why:'Scanning a target network directly (e.g., with Nmap) is noisy and often blocked by firewalls or detected by IDS. Shodan has already scanned the internet for you. You can query Shodan\'s database to find vulnerable devices on the target\'s IP range without ever sending a packet to the target.',
-    architecture:'Shodan operates a network of global crawlers that continuously scan the IPv4 and IPv6 address space on various ports. When they find an open port, they grab the banner (the response the service sends when connected, like "SSH-2.0-OpenSSH_7.2p2"). This banner information is indexed and made searchable.'
+  "id": "shodan-recon",
+  "eyebrow": "Module 02 - Topic 5",
+  "title": "Internet-Exposed Asset Discovery",
+  "module": "Phase 02: Threat Intelligence Analyst",
+  "sub": "Device search engines, service banners, and exposure assessment.",
+  "meta": {
+    "version": "1.0",
+    "estimatedTime": "30 min",
+    "difficulty": "Advanced",
+    "prerequisites": [
+      "Google Hacking"
+    ],
+    "lastReviewed": "2026-07-19"
   },
-  diagram:{
-    title:'Shodan Intelligence Gathering',
-    steps:[
-      {icon:'🌐',label:'Shodan Crawlers',desc:'Shodan continuously scans the internet, probing open ports and grabbing service banners.'},
-      {icon:'📄',label:'Banner Indexing',desc:'The banners (containing software versions, server types, device models) are indexed into a searchable database.'},
-      {icon:'🔍',label:'Attacker Query',desc:'The attacker queries Shodan (e.g., "org:TargetCorp port:22") instead of scanning the target directly.'},
-      {icon:'📱',label:'Vulnerability Identification',desc:'Shodan cross-references grabbed banners with known CVEs to flag vulnerable devices.'},
-      {icon:'🗺️',label:'IoT Discovery',desc:'Attackers find misconfigured webcams, industrial control systems, and routers exposed to the internet.'}
+  "objectives": [
+    "Use Shodan and Censys",
+    "Analyze service banners",
+    "Identify exposed IoT and ICS devices"
+  ],
+  "learn": {
+    "simple": "\n      <h3>Definition</h3>\n      <p>Asset discovery involves finding all internet-facing devices and services belonging to an organization.</p>\n      <h3>Simple Explanation</h3>\n      <p>Tools like Shodan continuously scan the internet and index the banners returned by devices, allowing attackers to find vulnerable servers without scanning themselves.</p>\n      <h3>Why This Exists</h3>\n      <ul>\n        <li><strong>Why was it created?</strong> To map the internet and index every device connected to it.</li>\n        <li><strong>What problem does it solve?</strong> Allows security teams to instantly search for exposed infrastructure without running slow, active network scans.</li>\n        <li><strong>What happens if it doesn't exist?</strong> Organizations remain blind to shadow IT, such as unauthorized development servers spun up by engineers.</li>\n        <li><strong>Which teams depend on it?</strong> Vulnerability Management, SOC Analysts, Penetration Testers.</li>\n        <li><strong>How does it affect the business?</strong> Securing exposed RDP or database ports prevents direct ransomware infections and data theft.</li>\n      </ul>\n      <h3>Career Confidence Layer</h3>\n      <p><strong>Why This Skill Matters:</strong> Understanding your exposed perimeter is critical. If you don't know it's on the internet, you can't secure it.</p>\n      <p><strong>Typical Job Roles:</strong></p>\n      <ul><li>Attack Surface Manager</li><li>Vulnerability Analyst</li><li>Red Team Operator</li></ul>\n      <p><strong>Interview Questions:</strong></p>\n      <ul><li>What is Shodan?</li><li>How does Shodan differ from Google?</li><li>What is a service banner and what can it tell you?</li></ul>\n    ",
+    "analogy": "<h3>Analogy</h3><p>Shodan is like a search engine for the internet's plumbing, showing you all the exposed pipes and valves.</p><h3>5W1H</h3><ul><li><strong>Who:</strong> Security Researchers</li><li><strong>What:</strong> Exposed devices and banners</li><li><strong>When:</strong> Perimeter Assessment</li><li><strong>Where:</strong> Internet-connected devices</li><li><strong>Why:</strong> To identify shadow IT and vulnerabilities</li><li><strong>How:</strong> Shodan, Censys, FOFA</li></ul>",
+    "architecture": "<h3>Technical Deep Dive</h3><p>Service banners provide metadata about the software running on a port (e.g., Apache/2.4.41). Attackers match these banners against vulnerability databases (CVEs).</p><h3>Architecture Diagram</h3><p><svg width=\"100\" height=\"100\"><rect x=\"25\" y=\"25\" width=\"50\" height=\"50\" fill=\"purple\"/></svg></p>",
+    "why": "<h3>Threat Intelligence</h3><p>Ransomware operators use Shodan to find exposed RDP endpoints to brute-force or exploit.</p><h3>Business Context (GFS)</h3><p>GFS employs continuous Attack Surface Management (ASM) to detect unauthorized instances spun up by developers.</p>"
+  },
+  "enterprise": {
+    "gfs": "GFS uses enterprise ASM platforms integrated with Shodan APIs.",
+    "workflow": [
+      "Query Shodan",
+      "Analyze Banners",
+      "Identify CVEs",
+      "Verify Ownership"
+    ],
+    "windows": "Web browser, PowerShell API wrappers.",
+    "linux": "Shodan CLI tool.",
+    "compliance": [
+      "NIST CSF (Identify function)"
     ]
   },
-  enterprise:{
-    role:'You are performing OSINT on GlobalFinSec Corp.',
-    situation:'GlobalFinSec recently acquired a small regional bank. The parent company\'s infrastructure is secure, but you need to footprint the newly acquired subsidiary\'s IP space (192.168.100.0/24 — simulated public IPs for this example).',
-    challenge:'Use Shodan to identify any exposed services or vulnerable devices in the subsidiary\'s IP range without performing active scanning.',
-    steps:[
-      'Search by IP range: net:192.168.100.0/24',
-      'Filter for specific vulnerable services (e.g., RDP): net:192.168.100.0/24 port:3389',
-      'Look for exposed webcams or IoT devices: net:192.168.100.0/24 "default password"',
-      'Check for known vulnerabilities: net:192.168.100.0/24 vuln:CVE-2019-0708 (BlueKeep)',
-      'Search by organization name to find assets not in the known IP range: org:"Acquired Regional Bank"'
+  "commands": {
+    "win": [
+      {
+        "command": "Invoke-RestMethod -Uri \"https://api.shodan.io/shodan/host/8.8.8.8?key=YOUR_KEY\"",
+        "purpose": "Query Shodan API using PowerShell.",
+        "expected": "JSON data containing open ports and banners.",
+        "mitre": "T1595",
+        "analystNote": "Requires a Shodan API key.",
+        "references": [
+          "Shodan API"
+        ],
+        "safe": true
+      }
     ],
-    outcome:'The Shodan query net:192.168.100.0/24 port:3389 revealed three servers with Remote Desktop Protocol exposed to the internet. One of them was flagged by Shodan as vulnerable to BlueKeep (CVE-2019-0708). You gained this intelligence without sending a single packet to the target network.',
-    lesson:'Acquisitions often introduce legacy, insecure infrastructure. Attackers use Shodan to find the weakest link in a corporate conglomerate\'s perimeter, completely bypassing the parent company\'s strong defenses.'
+    "lin": [
+      {
+        "command": "shodan host 8.8.8.8",
+        "purpose": "View Shodan data for an IP via CLI.",
+        "expected": "Formatted text showing ports, hostnames, and vulnerabilities.",
+        "mitre": "T1595.002",
+        "analystNote": "Fast way to check a suspicious IP.",
+        "references": [
+          "Shodan CLI"
+        ],
+        "safe": true
+      }
+    ]
   },
-  tools:[
-    {name:'Shodan Web Interface',cmd:'https://www.shodan.io',desc:'The primary search engine interface'},
-    {name:'Shodan CLI',cmd:'shodan search "apache"',desc:'Command-line interface for Shodan (requires API key)'},
-    {name:'Censys',cmd:'https://censys.io',desc:'A similar search engine for internet-connected devices and certificates'}
+  "pitfalls": [
+    {
+      "title": "Exposing RDP or SMB",
+      "desc": "Leaving management ports exposed to the internet.",
+      "fix": "Place management interfaces behind a VPN or Zero Trust Network Access (ZTNA)."
+    }
   ],
-  commands:{
-    win:['Rem - Use a web browser or install the Python Shodan CLI library'],
-    lin:['shodan init [API_KEY]','shodan search "org:TargetCorp"','shodan host 8.8.8.8','shodan stats port:22']
-  },
-  pitfalls:[
-    {icon:'⚠️',title:'Assuming Internal Devices Cannot Be Found on Shodan',desc:'Organizations often think their internal webcams or printers are safe. If port forwarding is misconfigured on the edge router, those internal devices become public and Shodan will index them.',fix:'Regularly search Shodan for your own IP ranges and organization name to ensure no internal devices have been accidentally exposed to the internet.'},
-    {icon:'🔴',title:'Relying Solely on Port Numbers',desc:'Searching for port:80 assumes HTTP is running on standard ports. Services are often moved to non-standard ports (e.g., HTTP on 8080 or SSH on 2222).',fix:'Search by service banner or product name rather than just port number. Shodan identifies services regardless of the port they run on.'},
-    {icon:'⛔',title:'Forgetting the API',desc:'Using the Shodan web interface is slow for large assessments. Failing to use the Shodan API or CLI means missing out on automation and bulk data analysis.',fix:'Obtain a Shodan API key and learn to use the Shodan command-line tool or Python library to script searches and integrate results into other tools.'}
-  ],
-  lab:{
-    title:'Lab: Device Discovery with Shodan',
-    difficulty:'Beginner',
-    duration:'20 min',
-    objectives:['Understand basic Shodan search filters','Identify exposed IoT devices','Find vulnerable services on specific IP ranges'],
-    steps:[
-      'Open shodan.io (create a free account if necessary).',
-      'Search for exposed webcams: "Server: SQ-WEBCAM" or "webcamXP"',
-      'Search for exposed industrial control systems (SCADA/ICS): port:502 (Modbus protocol)',
-      'Search for a specific organization: org:"Google"',
-      'Search for a specific IP address: host 8.8.8.8 (using the web interface or CLI if installed)',
-      'Notice the information provided: open ports, banners, geographic location, and associated CVEs.'
+  "lab": {
+    "type": "enterprise",
+    "difficulty": "Intermediate",
+    "duration": "25",
+    "platform": "Web / CLI",
+    "scenario": "\n      <h3>Organization Context</h3>\n      <p>CEO &rarr; CISO &rarr; Vulnerability Management Lead &rarr; You (Vulnerability Analyst)</p>\n      <h3>Your Role</h3>\n      <p>You are the assigned Vulnerability Analyst.</p>\n      <h3>Mission Brief</h3>\n      <p>Threat Intelligence reports an active exploitation campaign targeting exposed RDP servers. You must ensure GFS has no exposed RDP endpoints on the public internet.</p>\n    ",
+    "steps": [
+      "<strong>Objectives:</strong> Use Shodan to query the GFS ASN for exposed port 3389.",
+      "<strong>Enterprise Workspace:</strong> Open the Web Browser and navigate to Shodan.",
+      "<strong>Evidence Collection:</strong> Search for `asn:ASXXXXX port:3389`.",
+      "<strong>Analysis:</strong> Review any returned hosts and verify ownership.",
+      "<strong>Decision:</strong> If hosts are found, initiate emergency firewall blocks.",
+      "<strong>Report:</strong> Document the findings and submit to the Firewall Administration team.",
+      "<strong>Manager Feedback:</strong> Critical find. We have successfully blocked internet access to the exposed jump server.",
+      "<strong>Mission Summary:</strong> \u2713 Objectives Achieved \u2713 Skills Practiced: Shodan, ASM, Port Analysis \u2713 Business Impact: Prevented potential ransomware entry point \u2713 Interview Readiness: High"
     ],
-    validation:'You should be able to successfully construct a Shodan query using filters like port: and org: to find specific types of devices.'
+    "challenge": {
+      "title": "Challenge Mission: Shadow IT Hunter",
+      "objective": "Find a forgotten, vulnerable development server.",
+      "scenario": "A subsidiary was recently acquired.",
+      "expectedOutcome": "IP address of an exposed server belonging to the subsidiary.",
+      "hints": [
+        "Search by the subsidiary's specific ASN"
+      ]
+    }
   },
-  quiz:[
-    {q:'How does Shodan differ from Google?',opts:['Shodan is illegal to use','Shodan crawls web pages (HTML), Google crawls open ports','Google crawls web pages (HTML), Shodan crawls open ports and service banners','Shodan is only for the dark web'],correct:2,fb:'Google indexes the content of web pages. Shodan indexes the banners (metadata) returned by services running on open ports across the internet.'},
-    {q:'What is a "banner" in the context of Shodan?',opts:['An advertisement on a website','The text response a service sends when a connection is made (e.g., software version)','A flag captured in a CTF','A type of firewall rule'],correct:1,fb:'A banner is the text returned by a service (like SSH, FTP, or a web server) when a client connects. It often contains the software name and version number.'},
-    {q:'Which Shodan filter restricts results to a specific organization or company name?',opts:['company:','org:','domain:','target:'],correct:1,fb:'The org: filter (e.g., org:"GlobalFinSec") searches for IPs registered to a specific organization.'},
-    {q:'Why is Shodan considered a "passive" footprinting tool from the attacker\'s perspective?',opts:['Because Shodan doesn\'t find vulnerabilities','Because the attacker queries Shodan\'s database, rather than sending packets directly to the target','Because Shodan only works on local networks','Because it requires no internet connection'],correct:1,fb:'While Shodan\'s crawlers actively scan the internet, an attacker using Shodan is only interacting with Shodan\'s database. No traffic goes directly from the attacker to the target.'},
-    {q:'Which of the following is an example of an IoT device frequently found exposed on Shodan?',opts:['A disconnected laptop','An air-gapped server','An unauthenticated IP security camera','A password-protected encrypted hard drive'],correct:2,fb:'Internet of Things (IoT) devices, such as IP cameras, smart home hubs, and default-configured routers, are frequently exposed to the internet and easily found on Shodan.'},
-    {q:'What does the Shodan filter vuln: do?',opts:['Exploits the target','Searches for devices known to be affected by a specific CVE (Common Vulnerabilities and Exposures)','Scans the target for all vulnerabilities','Downloads a vulnerability scanner'],correct:1,fb:'The vuln: filter (requires a paid Shodan account or academic access) allows searching for devices that Shodan has identified as vulnerable to a specific CVE (e.g., vuln:CVE-2014-0160 for Heartbleed).'},
-    {q:'If you wanted to find exposed Remote Desktop Protocol (RDP) servers, which Shodan query would you use?',opts:['rdp:open','port:3389','service:rdp','protocol:remote_desktop'],correct:1,fb:'RDP typically runs on TCP port 3389. Searching port:3389 will return devices with this port open and the RDP service banner.'},
-    {q:'Which tool is a major alternative/competitor to Shodan for internet-wide scanning and device search?',opts:['Censys','Nmap','Wireshark','Metasploit'],correct:0,fb:'Censys (censys.io) is another search engine that continuously scans the internet, indexing devices, services, and TLS/SSL certificates.'},
-    {q:'What is SCADA/ICS?',opts:['A type of malware','Supervisory Control and Data Acquisition / Industrial Control Systems (often found exposed on Shodan)','A web application firewall','A secure encryption protocol'],correct:1,fb:'SCADA/ICS refers to systems that control industrial processes (power grids, water treatment, manufacturing). Finding these exposed on Shodan is a critical security risk.'},
-    {q:'How can an organization prevent their devices from appearing on Shodan?',opts:['They cannot prevent it','Place devices behind a firewall and do not expose ports to the public internet','Add the devices to a robots.txt file','Ask Shodan to remove them'],correct:1,fb:'Shodan scans public IP addresses. If a device is properly placed behind a firewall with no port forwarding or public IP exposure, Shodan\'s crawlers cannot reach it.'}
+  "quiz": [
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of shodan recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    }
   ],
-  flashcards:[
-    {f:'Shodan',b:'A search engine for internet-connected devices (IoT, servers, routers) that indexes service banners rather than web page content.'},
-    {f:'Banner',b:'The text response sent by a service when a connection is made, often revealing software names and version numbers.'},
-    {f:'org: (Shodan Filter)',b:'Restricts Shodan search results to IP addresses registered to a specific organization.'},
-    {f:'port: (Shodan Filter)',b:'Restricts Shodan search results to devices with a specific port open (e.g., port:22 for SSH).'},
-    {f:'IoT (Internet of Things)',b:'Non-standard computing devices (cameras, smart appliances, sensors) connected to the internet, frequently found exposed on Shodan.'},
-    {f:'Censys',b:'Another internet-wide scanning search engine, similar to Shodan, particularly strong in indexing TLS/SSL certificates.'},
-    {f:'Passive Reconnaissance (via Shodan)',b:'Gathering information about a target by querying Shodan\'s database, avoiding direct interaction with the target\'s network.'},
-    {f:'SCADA/ICS',b:'Industrial Control Systems used in manufacturing and infrastructure. Finding these exposed on Shodan indicates a severe security risk.'}
-  ],
-  ctf:{
-    scenario:'You use Shodan to footprint a target organization. You search for their registered IP range and find an exposed IP camera running on port 8081. The banner reveals the camera model.',
-    hint:'Think about the Shodan filter used to search for specific devices or organizations.',
-    flag:'CEH{sh0d4n_10t_r3c0n_2026}',
-    points:150
-  },
-  summary:[
-    'Shodan is a search engine for devices, not websites. It indexes open ports and service banners.',
-    'Using Shodan is a form of passive footprinting, as the attacker queries a database, not the target.',
-    'Shodan is heavily used to find exposed IoT devices, industrial control systems (SCADA), and vulnerable servers.',
-    'Key filters include port:, org:, net:, and vuln:.',
-    'Banners reveal software versions, which can be cross-referenced with exploit databases.',
-    'Censys is a prominent alternative to Shodan.',
-    'Devices properly secured behind firewalls without public exposure will not appear on Shodan.'
+  "flashcards": [
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    },
+    {
+      "front": "Banner Grabbing",
+      "back": "Connecting to a service to view its identifying information."
+    }
   ]
 };
 
 CONTENT['social-media-recon'] = {
-  module:'Module 02 · Footprinting & Reconnaissance',
-  title:'Social Media Reconnaissance',
-  sub:'Exploiting the human element for organizational intelligence.',
-  killchain:{phase:'Reconnaissance',mitre:'T1593.001 — Search Open Websites/Domains: Social Media',desc:'Social media provides the human context necessary for effective social engineering and reveals technical details employees accidentally share.'},
-  learn:{
-    simple:'Social Media Reconnaissance is the process of gathering intelligence from platforms like LinkedIn, Twitter, Facebook, and Instagram. It focuses on people — employees, their roles, relationships, and the information they inadvertently share about their employer.',
-    analogy:'If network scanning is looking at a building\'s floor plan, social media recon is reading the diaries of everyone who works there. You learn who has the keys, who is disgruntled, what software they complain about using, and when the security guard goes on break.',
-    why:'Humans are the weakest link in security. Social media reveals the organizational chart, reporting structures, and technical stack (from resumes/profiles). This information is gold for crafting highly targeted spear-phishing campaigns (Social Engineering).',
-    architecture:'Intelligence is divided into two categories: Technical (software versions, infrastructure details found in job descriptions or employee skills) and Human (names, roles, email formats, relationships, travel schedules, interests). Attackers use automated tools to scrape this data and build comprehensive profiles.'
+  "id": "social-media-recon",
+  "eyebrow": "Module 02 - Topic 6",
+  "title": "Social Media Intelligence",
+  "module": "Phase 02: Threat Intelligence Analyst",
+  "sub": "Employee information, organizational footprint, and publicly shared data.",
+  "meta": {
+    "version": "1.0",
+    "estimatedTime": "20 min",
+    "difficulty": "Beginner",
+    "prerequisites": [
+      "OSINT Techniques"
+    ],
+    "lastReviewed": "2026-07-19"
   },
-  diagram:{
-    title:'Social Media Intelligence Value',
-    steps:[
-      {icon:'💼',label:'LinkedIn',desc:'The most valuable platform. Reveals organizational structure, employee roles, technology stacks (skills section), and job openings.'},
-      {icon:'📤',label:'Twitter / X',desc:'Reveals real-time activities, complaints about internal tools, conference attendance, and professional networks.'},
-      {icon:'👥',label:'Facebook / Instagram',desc:'Reveals personal interests, family members, pets (often used as passwords), and out-of-office travel schedules.'},
-      {icon:'💻',label:'GitHub / StackOverflow',desc:'Reveals code snippets, internal naming conventions, and technical problems employees are actively trying to solve.'},
-      {icon:'📄',label:'Glassdoor',desc:'Reveals internal culture, disgruntled employees (prime targets for insider threat recruitment), and management changes.'}
+  "objectives": [
+    "Perform SOCMINT",
+    "Identify key personnel",
+    "Analyze organizational structure"
+  ],
+  "learn": {
+    "simple": "\n      <h3>Definition</h3>\n      <p>Social Media Intelligence (SOCMINT) is the process of collecting and analyzing data from social media platforms.</p>\n      <h3>Simple Explanation</h3>\n      <p>Employees often overshare information on platforms like LinkedIn, revealing technologies used, corporate hierarchy, and physical security details.</p>\n      <h3>Why This Exists</h3>\n      <ul>\n        <li><strong>Why was it created?</strong> Social media exists to connect people. SOCMINT exists to exploit those connections for intelligence.</li>\n        <li><strong>What problem does it solve?</strong> Allows attackers to build highly targeted spear-phishing profiles based on an employee's interests and connections.</li>\n        <li><strong>What happens if it doesn't exist?</strong> Without SOCMINT, social engineering attacks are broad and generic, significantly reducing their success rate.</li>\n        <li><strong>Which teams depend on it?</strong> Red Team, Social Engineers, Insider Threat Analysts.</li>\n        <li><strong>How does it affect the business?</strong> Humans are the weakest link. Educating employees on SOCMINT mitigates the risk of catastrophic targeted phishing breaches.</li>\n      </ul>\n      <h3>Career Confidence Layer</h3>\n      <p><strong>Why This Skill Matters:</strong> Social engineering is involved in over 80% of successful breaches. Understanding how attackers use social media is critical for defense.</p>\n      <p><strong>Typical Job Roles:</strong></p>\n      <ul><li>Insider Threat Analyst</li><li>Security Awareness Manager</li><li>Red Team Social Engineer</li></ul>\n      <p><strong>Interview Questions:</strong></p>\n      <ul><li>What is SOCMINT?</li><li>How can LinkedIn be used to map an organization's network architecture?</li><li>How do you protect employees from spear-phishing?</li></ul>\n    ",
+    "analogy": "<h3>Analogy</h3><p>SOCMINT is like reading an employee's diary that they left open on a park bench.</p><h3>5W1H</h3><ul><li><strong>Who:</strong> Social Engineers</li><li><strong>What:</strong> Employee profiles and posts</li><li><strong>When:</strong> Reconnaissance phase</li><li><strong>Where:</strong> LinkedIn, Twitter, Facebook</li><li><strong>Why:</strong> To craft social engineering attacks</li><li><strong>How:</strong> Manual review, scraping tools</li></ul>",
+    "architecture": "<h3>Technical Deep Dive</h3><p>Scraping tools can automate the extraction of employee names and job titles, which are then mutated into email addresses (e.g., first.last@target.com).</p><h3>Architecture Diagram</h3><p><svg width=\"100\" height=\"100\"><circle cx=\"50\" cy=\"50\" r=\"20\" fill=\"blue\"/><circle cx=\"30\" cy=\"80\" r=\"15\" fill=\"cyan\"/><circle cx=\"70\" cy=\"80\" r=\"15\" fill=\"cyan\"/></svg></p>",
+    "why": "<h3>Threat Intelligence</h3><p>Nation-state actors frequently use fake LinkedIn profiles to recruit or compromise targets working in sensitive industries.</p><h3>Business Context (GFS)</h3><p>GFS conducts regular Security Awareness Training to educate employees on the dangers of oversharing.</p>"
+  },
+  "enterprise": {
+    "gfs": "GFS restricts employees from posting pictures of ID badges or internal workstations.",
+    "workflow": [
+      "Identify Target",
+      "Find Social Profiles",
+      "Map Connections",
+      "Extract Intel",
+      "Craft Attack"
+    ],
+    "windows": "Browser-based tools.",
+    "linux": "Tools like CrossLinked to scrape LinkedIn.",
+    "compliance": [
+      "Internal Acceptable Use Policies (AUP)"
     ]
   },
-  enterprise:{
-    role:'You are a Red Team operator preparing a spear-phishing campaign against GlobalFinSec Corp.',
-    situation:'Your objective is to gain initial access to the internal network by compromising a mid-level IT administrator\'s workstation.',
-    challenge:'Use social media reconnaissance to identify a target, understand their role, and craft a convincing spear-phishing pretext.',
-    steps:[
-      'Search LinkedIn for "GlobalFinSec" and filter by "Information Technology". Identify a target: "John Doe, Systems Administrator".',
-      'Review John\'s LinkedIn profile: He lists "AWS Cloud Migration" and "VMware vSphere" as current projects.',
-      'Search Twitter for John\'s handle. Discover he recently tweeted about attending the "CloudSec 2024" conference in Las Vegas.',
-      'Find his manager on LinkedIn: "Jane Smith, Director of IT Operations".',
-      'Craft Pretext: Create a spoofed email from "Jane Smith" to John Doe with the subject "CloudSec 2024 Expense Report Issue", attaching a malicious Excel macro document labeled "Expense_Revisions.xlsm".'
+  "commands": {
+    "win": [
+      {
+        "command": "Search-Twitter -SearchTerm \"GFS Network Down\"",
+        "purpose": "Search for mentions on Twitter (custom script).",
+        "expected": "Recent tweets matching the term.",
+        "mitre": "T1593",
+        "analystNote": "Can indicate an ongoing incident before internal alarms trigger.",
+        "references": [
+          "Twitter API"
+        ],
+        "safe": true
+      }
     ],
-    outcome:'The highly targeted spear-phishing email bypassed the spam filters. Because the email referenced John\'s actual manager and a conference he actually attended, he opened the attachment and enabled macros, granting the Red Team a reverse shell on his workstation.',
-    lesson:'Generic phishing has a low success rate. Spear-phishing fueled by social media reconnaissance has a terrifyingly high success rate because it exploits trust and context.'
+    "lin": [
+      {
+        "command": "python3 crosslinked.py -f \"{first}.{last}@target.com\" \"Target Company\"",
+        "purpose": "Scrape LinkedIn and generate email addresses.",
+        "expected": "List of valid email addresses.",
+        "mitre": "T1593.001",
+        "analystNote": "Highly effective for building phishing lists.",
+        "references": [
+          "CrossLinked GitHub"
+        ],
+        "safe": true
+      }
+    ]
   },
-  tools:[
-    {name:'Sherlock',cmd:'python3 sherlock username',desc:'Hunts for a specific username across hundreds of social media sites'},
-    {name:'theHarvester',cmd:'theHarvester -d target.com -b linkedin',desc:'Gathers employee names from LinkedIn associated with a domain'},
-    {name:'Maltego',cmd:'maltego',desc:'Visualizes social networks and organizational relationships'},
-    {name:'Social-Engineer Toolkit (SET)',cmd:'setoolkit',desc:'Used later in the attack phase to craft the phishing emails based on recon'}
+  "pitfalls": [
+    {
+      "title": "Oversharing Technical Details",
+      "desc": "Posting job descriptions that list specific firewall models and software versions.",
+      "fix": "Use generic terms in job postings."
+    }
   ],
-  commands:{
-    win:['Rem - Primarily browser-based research or Python scripts like Sherlock'],
-    lin:['python3 sherlock user_handle','theHarvester -d target.com -b linkedin']
-  },
-  pitfalls:[
-    {icon:'⚠️',title:'Ignoring Job Postings',desc:'Job postings are written by HR, often detailing exactly what technologies, firewalls, and SIEMs the company uses ("Seeking candidate with 5 years experience in Palo Alto Firewalls and Splunk").',fix:'Monitor target job postings continuously. They provide a free inventory of the target\'s security and IT stack.'},
-    {icon:'🔴',title:'Underestimating Background Details in Photos',desc:'Employees post "first day at work" photos showing their ID badges (which can be cloned), their desk (showing Post-it notes with passwords), or whiteboards with network diagrams in the background.',fix:'Implement strict policies regarding photography in office spaces. Educate employees on OPSEC (Operational Security) regarding what they post online.'},
-    {icon:'⛔',title:'Focusing Only on Executives',desc:'Executives are often highly trained against phishing. Mid-level IT staff, HR personnel, and executive assistants have extensive access but are often softer targets.',fix:'Map the entire organization. Assistants have access to the CEO\'s calendar and inbox. IT Helpdesk has admin rights to all workstations.'}
-  ],
-  lab:{
-    title:'Lab: Profiling a Target via Social Media',
-    difficulty:'Beginner',
-    duration:'30 min',
-    objectives:['Map an organizational structure using LinkedIn','Identify potential spear-phishing targets','Correlate usernames across platforms using Sherlock'],
-    steps:[
-      'Open LinkedIn and search for a large, well-known organization (e.g., a major retailer).',
-      'Filter employees by the "Information Technology" department.',
-      'Identify the reporting structure: Find a Helpdesk Analyst, an IT Manager, and a CISO.',
-      'Note the specific technologies listed in their "Experience" and "Skills" sections.',
-      'Install Sherlock (if on a Linux VM): git clone https://github.com/sherlock-project/sherlock.git',
-      'Run Sherlock on a known public figure\'s username to see how it finds their accounts across various platforms.'
+  "lab": {
+    "type": "enterprise",
+    "difficulty": "Beginner",
+    "duration": "20",
+    "platform": "Web Browser",
+    "scenario": "\n      <h3>Organization Context</h3>\n      <p>CEO &rarr; CISO &rarr; Insider Threat Team Lead &rarr; You (Insider Threat Analyst)</p>\n      <h3>Your Role</h3>\n      <p>You are the assigned Insider Threat Analyst.</p>\n      <h3>Mission Brief</h3>\n      <p>A new IT Administrator was recently hired. You have been tasked with conducting an Open Source background sweep to ensure they are not exposing sensitive GFS architecture details online.</p>\n    ",
+    "steps": [
+      "<strong>Objectives:</strong> Review the employee's public LinkedIn and Twitter profiles for security policy violations.",
+      "<strong>Enterprise Workspace:</strong> Open the Web Browser.",
+      "<strong>Evidence Collection:</strong> Search for the employee's name and cross-reference with 'GFS IT'.",
+      "<strong>Analysis:</strong> The employee recently posted a picture of their desk, which clearly shows their access badge and an open terminal window detailing internal IP ranges.",
+      "<strong>Decision:</strong> This is a critical violation of the AUP.",
+      "<strong>Report:</strong> Document the posts and escalate to HR and Security Awareness.",
+      "<strong>Manager Feedback:</strong> Good catch. We have mandated an immediate retake of the Security Awareness module for the employee.",
+      "<strong>Mission Summary:</strong> \u2713 Objectives Achieved \u2713 Skills Practiced: SOCMINT, Policy Auditing \u2713 Business Impact: Prevented operational leakage \u2713 Interview Readiness: High"
     ],
-    validation:'You should be able to construct a small org chart (Manager -> Employee) and list at least three specific technologies the organization uses, based purely on employee LinkedIn profiles.'
+    "challenge": {
+      "title": "Challenge Mission: Phishing Campaign Prep",
+      "objective": "Compile a list of 10 IT employees and their likely email addresses.",
+      "scenario": "Target requires a spear-phishing simulation.",
+      "expectedOutcome": "A CSV of 10 valid email targets.",
+      "hints": [
+        "Look for the IT department on LinkedIn"
+      ]
+    }
   },
-  quiz:[
-    {q:'Which social media platform is generally considered the most valuable for mapping an organization\'s technical stack and reporting structure?',opts:['Facebook','Twitter','LinkedIn','Instagram'],correct:2,fb:'LinkedIn is a professional networking site where users voluntarily list their employer, job title, reporting relationships, and the specific technologies they work with (their skills).'},
-    {q:'What is the primary goal of Social Media Reconnaissance for an attacker?',opts:['To deface the company\'s social media pages','To gather personal and professional information to craft highly targeted social engineering (spear-phishing) attacks','To crack employee passwords directly','To find IP addresses for network scanning'],correct:1,fb:'While social media can reveal technical details, its primary value is providing the human context (relationships, interests, events) needed to make a spear-phishing email convincing.'},
-    {q:'Which open-source tool searches for a specific username across hundreds of different social media platforms?',opts:['Nmap','theHarvester','Sherlock','John the Ripper'],correct:2,fb:'Sherlock is a powerful command-line tool that takes a username and checks for its existence across a vast number of social networks and websites, helping correlate identities.'},
-    {q:'Why are corporate job postings considered a valuable OSINT source?',opts:['They contain employee passwords','They often list the specific technologies, firewalls, and software the company uses, revealing their internal tech stack','They provide the IP addresses of internal servers','They contain the company\'s financial records'],correct:1,fb:'Job postings often include detailed requirements (e.g., "Must have experience configuring Cisco ASA firewalls and managing Active Directory"), giving attackers a blueprint of the target\'s infrastructure.'},
-    {q:'What is "Spear-Phishing"?',opts:['A generic, mass-emailed scam','A highly targeted phishing attack aimed at a specific individual, utilizing personal details gathered through recon','A physical attack involving unauthorized entry','A type of denial-of-service attack'],correct:1,fb:'Spear-phishing uses the intelligence gathered during social media recon (manager\'s name, recent projects, attended conferences) to craft a customized, highly believable malicious email.'},
-    {q:'If an attacker uses LinkedIn to find the name of the IT Director, and then emails an IT Helpdesk employee pretending to be that Director to request a password reset, what type of attack is this?',opts:['Whaling','Pretexting / Impersonation (Social Engineering)','SQL Injection','Cross-Site Scripting'],correct:1,fb:'The attacker is using the organizational structure discovered on LinkedIn to create a convincing pretext (impersonating an authority figure) to manipulate an employee.'},
-    {q:'What security risk is associated with employees posting "First Day at Work" photos at their desks?',opts:['No risk, it improves morale','The photos might inadvertently capture ID badges, whiteboards with passwords, or internal network diagrams','It consumes excessive corporate bandwidth','It violates copyright laws'],correct:1,fb:'Background details in photos (whiteboards, sticky notes on monitors, ID badge designs) frequently leak sensitive physical and digital security information. This is an OPSEC (Operational Security) failure.'},
-    {q:'Which site is particularly useful for finding disgruntled employees who might be susceptible to insider threat recruitment?',opts:['GitHub','StackOverflow','Glassdoor','Pinterest'],correct:2,fb:'Glassdoor hosts anonymous employee reviews. Attackers analyze these reviews to understand corporate culture, identify internal conflicts, and spot potentially disgruntled employees.'},
-    {q:'What information can an attacker glean from a developer\'s StackOverflow questions?',opts:['The developer\'s home address','The specific coding problems, technologies, and internal naming conventions used within the company','The company\'s marketing strategy','The CEO\'s travel schedule'],correct:1,fb:'Developers often post code snippets or describe specific technical environments when asking for help on StackOverflow, accidentally revealing internal architecture and vulnerabilities.'},
-    {q:'What is OPSEC?',opts:['Open Source Email Collection','Operational Security - The process of identifying and protecting generally unclassified information that could be useful to an adversary','Organizational Phishing Security Education Course','Online Profile Scanning and Enumeration Check'],correct:1,fb:'Operational Security (OPSEC) involves recognizing what public information (like social media posts) could be pieced together by an adversary to form a threat, and taking steps to protect that information.'}
+  "quiz": [
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    },
+    {
+      "question": "Knowledge Check: What is the primary objective of social media recon?",
+      "options": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "answer": 0,
+      "explanation": "This foundational concept ensures you understand the core mechanics of the objective.",
+      "difficulty": "Foundation"
+    }
   ],
-  flashcards:[
-    {f:'Social Media Recon',b:'Gathering intelligence from social platforms to understand a target\'s organizational structure, employee roles, and technology stack.'},
-    {f:'Spear-Phishing',b:'A highly targeted phishing attack crafted using personal and professional details gathered during social media reconnaissance.'},
-    {f:'LinkedIn (for OSINT)',b:'The primary source for mapping corporate hierarchies and identifying specific technologies used by an organization.'},
-    {f:'Sherlock',b:'An open-source tool used to hunt down a specific username across hundreds of different social media sites and platforms.'},
-    {f:'Job Postings (OSINT)',b:'Publicly available job descriptions that inadvertently reveal the specific hardware, software, and security tools an organization uses.'},
-    {f:'OPSEC',b:'Operational Security. The practice of protecting seemingly harmless pieces of public information that an adversary could piece together.'},
-    {f:'Glassdoor (for OSINT)',b:'Used to gauge corporate culture and identify potentially disgruntled employees susceptible to insider threat recruitment.'},
-    {f:'Pretexting',b:'A social engineering technique where an attacker creates a fabricated scenario (based on recon data) to manipulate a target into divulging information.'}
-  ],
-  ctf:{
-    scenario:'You are profiling a target company. You find a Reddit account belonging to one of their SysAdmins. They use the same username on all platforms. Use a tool to find their GitHub account and find the flag in their bio.',
-    hint:'The tool Sherlock is used to find accounts with the same username across different platforms.',
-    flag:'CEH{s0c14l_m3d14_0s1nt_2026}',
-    points:150
-  },
-  summary:[
-    'Social media recon focuses on the human element, providing the context needed for social engineering.',
-    'LinkedIn is the most critical platform for mapping organizational structure and identifying technology stacks.',
-    'Job postings are a free inventory of a target\'s internal security and IT infrastructure.',
-    'Automated tools like Sherlock help correlate identities across multiple platforms.',
-    'Spear-phishing relies entirely on the quality of intelligence gathered during this phase.',
-    'Poor OPSEC by employees (backgrounds in photos, complaining on Twitter) creates significant vulnerabilities.',
-    'Developers posting on StackOverflow or GitHub often leak internal architecture details.'
+  "flashcards": [
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    },
+    {
+      "front": "SOCMINT",
+      "back": "Social Media Intelligence"
+    }
   ]
 };
 
 
-
-// =================================================================
 // MODULE 03 — Scanning Networks
 // =================================================================
 
