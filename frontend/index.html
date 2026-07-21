@@ -1523,8 +1523,12 @@ function buildLearnHTML(d){
 
 // -- TAB 2: DIAGRAM --
 function buildDiagramHTML(d){
-  if(d.diagram && d.diagram.svg) {
-    return `<div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px;">
+  if(!d.diagram) return buildComingSoonHTML('\u{1F504}','Diagram & Workflow is being designed');
+  
+  let html = '';
+  
+  if(d.diagram.svg) {
+    html += `<div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px;">
       <div style="font-size:1rem;font-weight:700;color:var(--blue);margin-bottom:24px;font-family:var(--mono);">${d.diagram.title||'Architecture & Flow'}</div>
       <div class="diagram-svg-container" style="text-align:center;">
         ${d.diagram.svg}
@@ -1532,23 +1536,29 @@ function buildDiagramHTML(d){
       ${d.diagram.caption ? `<div style="text-align:center;color:var(--text-muted);font-size:0.85rem;margin-top:16px;">${d.diagram.caption}</div>` : ''}
     </div>`;
   }
-  if(!d.diagram||!d.diagram.steps||!d.diagram.steps.length) return buildComingSoonHTML('\u{1F504}','Diagram & Workflow is being designed');
-  return `
-  <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px;">
-    <div style="font-size:1rem;font-weight:700;color:var(--blue);margin-bottom:24px;font-family:var(--mono);">${d.diagram.title||'Process Flow'}</div>
-    <div class="diagram-flow">
-      ${d.diagram.steps.map((s,i)=>`
-        <div class="diagram-step">
-          <div class="diagram-step-icon">${s.icon||'▶'}</div>
-          <div class="diagram-step-body">
-            <div class="diagram-step-label">Step ${i+1}: ${s.label}</div>
-            <div class="diagram-step-desc">${s.desc}</div>
+  
+  if(d.diagram.steps && d.diagram.steps.length) {
+    html += `
+    <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px;">
+      <div style="font-size:1rem;font-weight:700;color:var(--blue);margin-bottom:24px;font-family:var(--mono);">${d.diagram.workflowTitle||'Process Flow'}</div>
+      <div class="diagram-flow">
+        ${d.diagram.steps.map((s,i)=>`
+          <div class="diagram-step">
+            <div class="diagram-step-icon">${s.icon||'▶'}</div>
+            <div class="diagram-step-body">
+              <div class="diagram-step-label">Step ${i+1}: ${s.label}</div>
+              <div class="diagram-step-desc">${s.desc}</div>
+            </div>
           </div>
-        </div>
-        ${i<d.diagram.steps.length-1?'<div class="diagram-arrow">↓</div>':''}
-      `).join('')}
-    </div>
-  </div>`;
+          ${i<d.diagram.steps.length-1?'<div class="diagram-arrow">↓</div>':''}
+        `).join('')}
+      </div>
+    </div>`;
+  }
+  
+  if(!html) return buildComingSoonHTML('\u{1F504}','Diagram & Workflow is being designed');
+  
+  return html;
 }
 
 // -- TAB 3: ENTERPRISE --
@@ -11118,7 +11128,29 @@ CONTENT['footprinting-concepts'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><path d=\"M 100 100 L 250 100\" stroke=\"#00aaff\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/><rect x=\"20\" y=\"70\" width=\"80\" height=\"60\" fill=\"#1a1a24\" stroke=\"#00aaff\"/><text x=\"60\" y=\"105\" fill=\"#fff\" font-family=\"monospace\" font-size=\"12\" text-anchor=\"middle\">Analyst</text><rect x=\"250\" y=\"70\" width=\"120\" height=\"60\" fill=\"#1a1a24\" stroke=\"#00aaff\"/><text x=\"310\" y=\"105\" fill=\"#fff\" font-family=\"monospace\" font-size=\"12\" text-anchor=\"middle\">OSINT Sources</text></svg>"
+    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><path d=\"M 100 100 L 250 100\" stroke=\"#00aaff\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/><rect x=\"20\" y=\"70\" width=\"80\" height=\"60\" fill=\"#1a1a24\" stroke=\"#00aaff\"/><text x=\"60\" y=\"105\" fill=\"#fff\" font-family=\"monospace\" font-size=\"12\" text-anchor=\"middle\">Analyst</text><rect x=\"250\" y=\"70\" width=\"120\" height=\"60\" fill=\"#1a1a24\" stroke=\"#00aaff\"/><text x=\"310\" y=\"105\" fill=\"#fff\" font-family=\"monospace\" font-size=\"12\" text-anchor=\"middle\">OSINT Sources</text></svg>",
+    "steps": [
+      {
+        "icon": "\ud83d\udd75\ufe0f",
+        "label": "Define Target Scope",
+        "desc": "Identify domains, IP ranges, and organizational parameters."
+      },
+      {
+        "icon": "\ud83c\udf10",
+        "label": "Passive Recon",
+        "desc": "Gather information from public sources without direct interaction."
+      },
+      {
+        "icon": "\ud83d\udd0d",
+        "label": "Active Recon",
+        "desc": "Directly query target servers (e.g., DNS, Whois) for detailed info."
+      },
+      {
+        "icon": "\ud83d\udcca",
+        "label": "Analyze Data",
+        "desc": "Compile findings to map the external attack surface."
+      }
+    ]
   },
   "enterprise": {
     "role": "Threat Intelligence Analyst | SOC Team",
@@ -11337,7 +11369,29 @@ CONTENT['osint-techniques'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> OSINT Framework -> Aggregated Data</text></svg>"
+    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> OSINT Framework -> Aggregated Data</text></svg>",
+    "steps": [
+      {
+        "icon": "\ud83c\udfaf",
+        "label": "Identify Intelligence Needs",
+        "desc": "Define what information is required (e.g., emails, docs)."
+      },
+      {
+        "icon": "\ud83d\udd78\ufe0f",
+        "label": "Harvest Data",
+        "desc": "Use tools like theHarvester to scrape search engines and APIs."
+      },
+      {
+        "icon": "\ud83e\udde0",
+        "label": "Process & Filter",
+        "desc": "Remove false positives and irrelevant information."
+      },
+      {
+        "icon": "\ud83d\udcc8",
+        "label": "Develop Pretext",
+        "desc": "Use the intelligence to craft realistic social engineering scenarios."
+      }
+    ]
   },
   "enterprise": {
     "role": "OSINT Analyst | Threat Intelligence Team",
@@ -11555,7 +11609,29 @@ CONTENT['whois-dns'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">User -> DNS Query -> Resolver -> Authoritative DNS -> Response</text></svg>"
+    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">User -> DNS Query -> Resolver -> Authoritative DNS -> Response</text></svg>",
+    "steps": [
+      {
+        "icon": "\ud83d\udcdd",
+        "label": "Query WHOIS",
+        "desc": "Determine domain ownership, registrar, and administrative contacts."
+      },
+      {
+        "icon": "\ud83d\udda5\ufe0f",
+        "label": "Identify Name Servers",
+        "desc": "Locate the authoritative DNS servers for the target domain."
+      },
+      {
+        "icon": "\ud83d\udcdc",
+        "label": "Enumerate Records",
+        "desc": "Query for A, MX, TXT, and CNAME records to map infrastructure."
+      },
+      {
+        "icon": "\ud83d\udea8",
+        "label": "Test Zone Transfer",
+        "desc": "Attempt AXFR to see if the server leaks its entire zone file."
+      }
+    ]
   },
   "enterprise": {
     "role": "Network Security Engineer | Infrastructure Team",
@@ -11774,7 +11850,29 @@ CONTENT['google-hacking'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Advanced Query -> Search Index -> Leaked Data</text></svg>"
+    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Advanced Query -> Search Index -> Leaked Data</text></svg>",
+    "steps": [
+      {
+        "icon": "\ud83d\udd0e",
+        "label": "Select Target Domain",
+        "desc": "Use the site: operator to restrict searches."
+      },
+      {
+        "icon": "\ud83d\udee0\ufe0f",
+        "label": "Apply Dorks",
+        "desc": "Use filetype:, intitle:, or inurl: to find specific vulnerabilities."
+      },
+      {
+        "icon": "\ud83d\udc40",
+        "label": "Review SERPs",
+        "desc": "Analyze the search engine results pages for exposed data."
+      },
+      {
+        "icon": "\ud83d\udce5",
+        "label": "Extract Intel",
+        "desc": "Download exposed backups, passwords, or PII."
+      }
+    ]
   },
   "enterprise": {
     "role": "Data Security Analyst | Data Privacy Team",
@@ -11993,7 +12091,29 @@ CONTENT['shodan-recon'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Shodan API -> Banner Grabs -> Exposed Infrastructure</text></svg>"
+    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Shodan API -> Banner Grabs -> Exposed Infrastructure</text></svg>",
+    "steps": [
+      {
+        "icon": "\ud83d\udce1",
+        "label": "Query Shodan",
+        "desc": "Search by organization name, IP, or specific product."
+      },
+      {
+        "icon": "\ud83d\udea9",
+        "label": "Analyze Banners",
+        "desc": "Review the returned service banners for version numbers."
+      },
+      {
+        "icon": "\ud83d\udd13",
+        "label": "Identify Vulns",
+        "desc": "Cross-reference exposed versions with known CVEs."
+      },
+      {
+        "icon": "\ud83d\udee1\ufe0f",
+        "label": "Remediate",
+        "desc": "Ensure firewalls block public access to these sensitive ports."
+      }
+    ]
   },
   "enterprise": {
     "role": "Vulnerability Analyst | Vulnerability Management Team",
@@ -12212,7 +12332,29 @@ CONTENT['social-media-recon'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Social Media Profiles -> Org Chart & Tech Stack</text></svg>"
+    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Social Media Profiles -> Org Chart & Tech Stack</text></svg>",
+    "steps": [
+      {
+        "icon": "\ud83d\udc65",
+        "label": "Identify Key Personnel",
+        "desc": "Locate executives, IT admins, and new hires."
+      },
+      {
+        "icon": "\ud83d\udcf1",
+        "label": "Enumerate Profiles",
+        "desc": "Search LinkedIn, Twitter, and other platforms."
+      },
+      {
+        "icon": "\ud83c\udfe2",
+        "label": "Extract Tech Stack",
+        "desc": "Note any software or hardware mentioned in job descriptions."
+      },
+      {
+        "icon": "\ud83c\udfa3",
+        "label": "Craft Phish",
+        "desc": "Create highly targeted spear-phishing emails based on interests."
+      }
+    ]
   },
   "enterprise": {
     "role": "Insider Threat Analyst | Security Operations",
@@ -12406,6 +12548,7 @@ CONTENT['social-media-recon'] = {
     }
   ]
 };
+
 
 
 
