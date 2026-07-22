@@ -11128,7 +11128,6 @@ CONTENT['footprinting-concepts'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><path d=\"M 100 100 L 250 100\" stroke=\"#00aaff\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/><rect x=\"20\" y=\"70\" width=\"80\" height=\"60\" fill=\"#1a1a24\" stroke=\"#00aaff\"/><text x=\"60\" y=\"105\" fill=\"#fff\" font-family=\"monospace\" font-size=\"12\" text-anchor=\"middle\">Analyst</text><rect x=\"250\" y=\"70\" width=\"120\" height=\"60\" fill=\"#1a1a24\" stroke=\"#00aaff\"/><text x=\"310\" y=\"105\" fill=\"#fff\" font-family=\"monospace\" font-size=\"12\" text-anchor=\"middle\">OSINT Sources</text></svg>",
     "steps": [
       {
         "icon": "\ud83d\udd75\ufe0f",
@@ -11155,24 +11154,44 @@ CONTENT['footprinting-concepts'] = {
   "enterprise": {
     "role": "Threat Intelligence Analyst | SOC Team",
     "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; SOC Manager &rarr; SOC Team &rarr; You<br><br><b>Business Context:</b><br>GFS just acquired a new subsidiary and we must map their external perimeter to identify inherited risks.",
-    "challenge": "<b>Mission Brief:</b><br>Identify all publicly exposed assets belonging to the newly acquired subsidiary before integration.<br><br><b>Objectives:</b><br>- Identify root domain ownership.<br>- Map external IP ranges.<br>- Enumerate exposed subdomains.<br><br><b>Expected Deliverables:</b><br>A consolidated report mapping the external asset perimeter of the subsidiary."
+    "challenge": "<b>Mission Brief:</b><br>Identify all publicly exposed assets belonging to the newly acquired subsidiary before integration.<br><br><b>Objectives:</b><br>- Identify root domain ownership.<br>- Map external IP ranges.<br>- Enumerate exposed subdomains.<br><br><b>Expected Deliverables:</b><br>A consolidated report mapping the external asset perimeter of the subsidiary.",
+    "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+    "lesson": "Always validate external exposure before adversaries do."
   },
-  "commands": [
-    {
-      "win": "nslookup target.com",
-      "lin": "dig target.com",
-      "desc": "DNS Resolution",
-      "out": "IP addresses of target.com",
-      "note": "Enterprise Use: SOC Analysts use this to verify domain routing."
-    },
-    {
-      "win": "ping target.com",
-      "lin": "ping -c 4 target.com",
-      "desc": "Host Discovery",
-      "out": "ICMP Echo Replies",
-      "note": "Enterprise Use: Network Engineers use this to verify host liveness."
-    }
-  ],
+  "commands": {
+    "win": [
+      {
+        "command": "nslookup target.com",
+        "purpose": "DNS Resolution",
+        "expected": "IP addresses of target.com",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: SOC Analysts use this to verify domain routing."
+      },
+      {
+        "command": "ping target.com",
+        "purpose": "Host Discovery",
+        "expected": "ICMP Echo Replies",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Network Engineers use this to verify host liveness."
+      }
+    ],
+    "lin": [
+      {
+        "command": "dig target.com",
+        "purpose": "DNS Resolution",
+        "expected": "IP addresses of target.com",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: SOC Analysts use this to verify domain routing."
+      },
+      {
+        "command": "ping -c 4 target.com",
+        "purpose": "Host Discovery",
+        "expected": "ICMP Echo Replies",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Network Engineers use this to verify host liveness."
+      }
+    ]
+  },
   "lab": {
     "title": "Perimeter Mapping Challenge",
     "difficulty": "Beginner",
@@ -11349,7 +11368,47 @@ CONTENT['footprinting-concepts'] = {
       "f": "What is Passive Footprinting?",
       "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
     }
-  ]
+  ],
+  "meta": {
+    "version": "2.0",
+    "estimatedTime": "45 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "Module 01 - Intro to Ethical Hacking"
+    ],
+    "lastReviewed": "2026-07-21"
+  },
+  "objectives": [
+    "Master the fundamental concepts.",
+    "Apply tools in an enterprise context.",
+    "Validate knowledge through practical assessment."
+  ],
+  "pitfalls": [
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Relying solely on automated tools",
+      "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+      "fix": "Always manually verify the output of automated scanners against raw data."
+    },
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Violating Rules of Engagement (ROE)",
+      "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+      "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+    }
+  ],
+  "summary": [
+    "Reconnaissance is the foundation of all successful engagements.",
+    "Passive OSINT provides stealthy insights without triggering alerts.",
+    "Always cross-reference multiple data sources to eliminate false positives.",
+    "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+  ],
+  "ctf": {
+    "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+    "hint": "Look for Base64 encoded strings in the configuration block.",
+    "flag": "CEH{r3c0n_m4st3r}",
+    "points": 200
+  }
 };
 
 CONTENT['osint-techniques'] = {
@@ -11369,7 +11428,6 @@ CONTENT['osint-techniques'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> OSINT Framework -> Aggregated Data</text></svg>",
     "steps": [
       {
         "icon": "\ud83c\udfaf",
@@ -11396,24 +11454,44 @@ CONTENT['osint-techniques'] = {
   "enterprise": {
     "role": "OSINT Analyst | Threat Intelligence Team",
     "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; Threat Intel Lead &rarr; You<br><br><b>Business Context:</b><br>The CISO wants a defensive OSINT sweep of the executive team to identify potential spear-phishing vectors.",
-    "challenge": "<b>Mission Brief:</b><br>Conduct an OSINT investigation on key executives to identify exposed personal identifiers.<br><br><b>Objectives:</b><br>- Discover exposed email addresses.<br>- Identify public document leaks.<br><br><b>Expected Deliverables:</b><br>An executive exposure report detailing leaked credentials or sensitive documents."
+    "challenge": "<b>Mission Brief:</b><br>Conduct an OSINT investigation on key executives to identify exposed personal identifiers.<br><br><b>Objectives:</b><br>- Discover exposed email addresses.<br>- Identify public document leaks.<br><br><b>Expected Deliverables:</b><br>An executive exposure report detailing leaked credentials or sensitive documents.",
+    "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+    "lesson": "Always validate external exposure before adversaries do."
   },
-  "commands": [
-    {
-      "win": "theharvester -d target.com -b google",
-      "lin": "theHarvester -d target.com -b google",
-      "desc": "Email Harvesting",
-      "out": "List of discovered email addresses",
-      "note": "Enterprise Use: Pen Testers use this to build target lists for phishing."
-    },
-    {
-      "win": "curl -s https://crt.sh/?q=target.com",
-      "lin": "curl -s \"https://crt.sh/?q=target.com&output=json\"",
-      "desc": "Certificate Search",
-      "out": "List of subdomains from certs",
-      "note": "Enterprise Use: Bug Bounty hunters use this to find hidden infrastructure."
-    }
-  ],
+  "commands": {
+    "win": [
+      {
+        "command": "theharvester -d target.com -b google",
+        "purpose": "Email Harvesting",
+        "expected": "List of discovered email addresses",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Pen Testers use this to build target lists for phishing."
+      },
+      {
+        "command": "curl -s https://crt.sh/?q=target.com",
+        "purpose": "Certificate Search",
+        "expected": "List of subdomains from certs",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Bug Bounty hunters use this to find hidden infrastructure."
+      }
+    ],
+    "lin": [
+      {
+        "command": "theHarvester -d target.com -b google",
+        "purpose": "Email Harvesting",
+        "expected": "List of discovered email addresses",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Pen Testers use this to build target lists for phishing."
+      },
+      {
+        "command": "curl -s \"https://crt.sh/?q=target.com&output=json\"",
+        "purpose": "Certificate Search",
+        "expected": "List of subdomains from certs",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Bug Bounty hunters use this to find hidden infrastructure."
+      }
+    ]
+  },
   "lab": {
     "title": "Executive Exposure Sweep",
     "difficulty": "Beginner",
@@ -11589,7 +11667,47 @@ CONTENT['osint-techniques'] = {
       "f": "theHarvester",
       "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
     }
-  ]
+  ],
+  "meta": {
+    "version": "2.0",
+    "estimatedTime": "45 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "Module 01 - Intro to Ethical Hacking"
+    ],
+    "lastReviewed": "2026-07-21"
+  },
+  "objectives": [
+    "Master the fundamental concepts.",
+    "Apply tools in an enterprise context.",
+    "Validate knowledge through practical assessment."
+  ],
+  "pitfalls": [
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Relying solely on automated tools",
+      "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+      "fix": "Always manually verify the output of automated scanners against raw data."
+    },
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Violating Rules of Engagement (ROE)",
+      "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+      "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+    }
+  ],
+  "summary": [
+    "Reconnaissance is the foundation of all successful engagements.",
+    "Passive OSINT provides stealthy insights without triggering alerts.",
+    "Always cross-reference multiple data sources to eliminate false positives.",
+    "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+  ],
+  "ctf": {
+    "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+    "hint": "Look for Base64 encoded strings in the configuration block.",
+    "flag": "CEH{r3c0n_m4st3r}",
+    "points": 200
+  }
 };
 
 CONTENT['whois-dns'] = {
@@ -11609,7 +11727,6 @@ CONTENT['whois-dns'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">User -> DNS Query -> Resolver -> Authoritative DNS -> Response</text></svg>",
     "steps": [
       {
         "icon": "\ud83d\udcdd",
@@ -11636,24 +11753,44 @@ CONTENT['whois-dns'] = {
   "enterprise": {
     "role": "Network Security Engineer | Infrastructure Team",
     "situation": "<b>Organization Context:</b><br>CEO &rarr; CIO &rarr; Network Operations Director &rarr; You<br><br><b>Business Context:</b><br>A recent audit flagged potential DNS misconfigurations in a legacy GFS domain. You must verify if zone transfers are disabled.",
-    "challenge": "<b>Mission Brief:</b><br>Perform a comprehensive DNS footprint of our legacy domains to ensure no internal records are leaking.<br><br><b>Objectives:</b><br>- Identify name servers.<br>- Attempt AXFR to verify security controls.<br><br><b>Expected Deliverables:</b><br>A DNS security posture report."
+    "challenge": "<b>Mission Brief:</b><br>Perform a comprehensive DNS footprint of our legacy domains to ensure no internal records are leaking.<br><br><b>Objectives:</b><br>- Identify name servers.<br>- Attempt AXFR to verify security controls.<br><br><b>Expected Deliverables:</b><br>A DNS security posture report.",
+    "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+    "lesson": "Always validate external exposure before adversaries do."
   },
-  "commands": [
-    {
-      "win": "nslookup -type=mx target.com",
-      "lin": "host -t mx target.com",
-      "desc": "Find Mail Servers",
-      "out": "List of MX records",
-      "note": "Enterprise Use: Used to identify email infrastructure for social engineering."
-    },
-    {
-      "win": "nslookup -type=any -ls target.com",
-      "lin": "dig axfr @ns1.target.com target.com",
-      "desc": "Zone Transfer",
-      "out": "Full DNS zone dump if vulnerable",
-      "note": "Enterprise Use: Red Teams use this to instantly map an entire network."
-    }
-  ],
+  "commands": {
+    "win": [
+      {
+        "command": "nslookup -type=mx target.com",
+        "purpose": "Find Mail Servers",
+        "expected": "List of MX records",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Used to identify email infrastructure for social engineering."
+      },
+      {
+        "command": "nslookup -type=any -ls target.com",
+        "purpose": "Zone Transfer",
+        "expected": "Full DNS zone dump if vulnerable",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Red Teams use this to instantly map an entire network."
+      }
+    ],
+    "lin": [
+      {
+        "command": "host -t mx target.com",
+        "purpose": "Find Mail Servers",
+        "expected": "List of MX records",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Used to identify email infrastructure for social engineering."
+      },
+      {
+        "command": "dig axfr @ns1.target.com target.com",
+        "purpose": "Zone Transfer",
+        "expected": "Full DNS zone dump if vulnerable",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Red Teams use this to instantly map an entire network."
+      }
+    ]
+  },
   "lab": {
     "title": "Zone Transfer Audit",
     "difficulty": "Beginner",
@@ -11830,7 +11967,47 @@ CONTENT['whois-dns'] = {
       "f": "DNS Zone Transfer (AXFR)",
       "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
     }
-  ]
+  ],
+  "meta": {
+    "version": "2.0",
+    "estimatedTime": "45 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "Module 01 - Intro to Ethical Hacking"
+    ],
+    "lastReviewed": "2026-07-21"
+  },
+  "objectives": [
+    "Master the fundamental concepts.",
+    "Apply tools in an enterprise context.",
+    "Validate knowledge through practical assessment."
+  ],
+  "pitfalls": [
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Relying solely on automated tools",
+      "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+      "fix": "Always manually verify the output of automated scanners against raw data."
+    },
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Violating Rules of Engagement (ROE)",
+      "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+      "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+    }
+  ],
+  "summary": [
+    "Reconnaissance is the foundation of all successful engagements.",
+    "Passive OSINT provides stealthy insights without triggering alerts.",
+    "Always cross-reference multiple data sources to eliminate false positives.",
+    "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+  ],
+  "ctf": {
+    "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+    "hint": "Look for Base64 encoded strings in the configuration block.",
+    "flag": "CEH{r3c0n_m4st3r}",
+    "points": 200
+  }
 };
 
 CONTENT['google-hacking'] = {
@@ -11850,7 +12027,6 @@ CONTENT['google-hacking'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Advanced Query -> Search Index -> Leaked Data</text></svg>",
     "steps": [
       {
         "icon": "\ud83d\udd0e",
@@ -11877,24 +12053,44 @@ CONTENT['google-hacking'] = {
   "enterprise": {
     "role": "Data Security Analyst | Data Privacy Team",
     "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; Data Privacy Officer &rarr; You<br><br><b>Business Context:</b><br>The Data Privacy Officer is concerned that legacy PDF reports containing PII might have been indexed by search engines.",
-    "challenge": "<b>Mission Brief:</b><br>Perform Google Dorking against GFS domains to identify any indexed sensitive documents.<br><br><b>Objectives:</b><br>- Locate exposed PDFs or DOCs.<br>- Identify exposed directory listings.<br><br><b>Expected Deliverables:</b><br>A list of URLs pointing to exposed sensitive files that need to be de-indexed."
+    "challenge": "<b>Mission Brief:</b><br>Perform Google Dorking against GFS domains to identify any indexed sensitive documents.<br><br><b>Objectives:</b><br>- Locate exposed PDFs or DOCs.<br>- Identify exposed directory listings.<br><br><b>Expected Deliverables:</b><br>A list of URLs pointing to exposed sensitive files that need to be de-indexed.",
+    "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+    "lesson": "Always validate external exposure before adversaries do."
   },
-  "commands": [
-    {
-      "win": "site:target.com filetype:pdf",
-      "lin": "site:target.com filetype:pdf",
-      "desc": "Find PDFs",
-      "out": "Search results limited to PDFs on target.com",
-      "note": "Enterprise Use: Data Privacy teams use this to find leaked documents."
-    },
-    {
-      "win": "intitle:\"index of\" site:target.com",
-      "lin": "intitle:\"index of\" site:target.com",
-      "desc": "Find Directory Listings",
-      "out": "Exposed web directories",
-      "note": "Enterprise Use: Pen Testers use this to find exposed file repositories."
-    }
-  ],
+  "commands": {
+    "win": [
+      {
+        "command": "site:target.com filetype:pdf",
+        "purpose": "Find PDFs",
+        "expected": "Search results limited to PDFs on target.com",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Data Privacy teams use this to find leaked documents."
+      },
+      {
+        "command": "intitle:\"index of\" site:target.com",
+        "purpose": "Find Directory Listings",
+        "expected": "Exposed web directories",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Pen Testers use this to find exposed file repositories."
+      }
+    ],
+    "lin": [
+      {
+        "command": "site:target.com filetype:pdf",
+        "purpose": "Find PDFs",
+        "expected": "Search results limited to PDFs on target.com",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Data Privacy teams use this to find leaked documents."
+      },
+      {
+        "command": "intitle:\"index of\" site:target.com",
+        "purpose": "Find Directory Listings",
+        "expected": "Exposed web directories",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Pen Testers use this to find exposed file repositories."
+      }
+    ]
+  },
   "lab": {
     "title": "Data Leak Discovery",
     "difficulty": "Beginner",
@@ -12071,7 +12267,47 @@ CONTENT['google-hacking'] = {
       "f": "Google Dorking",
       "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
     }
-  ]
+  ],
+  "meta": {
+    "version": "2.0",
+    "estimatedTime": "45 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "Module 01 - Intro to Ethical Hacking"
+    ],
+    "lastReviewed": "2026-07-21"
+  },
+  "objectives": [
+    "Master the fundamental concepts.",
+    "Apply tools in an enterprise context.",
+    "Validate knowledge through practical assessment."
+  ],
+  "pitfalls": [
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Relying solely on automated tools",
+      "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+      "fix": "Always manually verify the output of automated scanners against raw data."
+    },
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Violating Rules of Engagement (ROE)",
+      "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+      "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+    }
+  ],
+  "summary": [
+    "Reconnaissance is the foundation of all successful engagements.",
+    "Passive OSINT provides stealthy insights without triggering alerts.",
+    "Always cross-reference multiple data sources to eliminate false positives.",
+    "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+  ],
+  "ctf": {
+    "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+    "hint": "Look for Base64 encoded strings in the configuration block.",
+    "flag": "CEH{r3c0n_m4st3r}",
+    "points": 200
+  }
 };
 
 CONTENT['shodan-recon'] = {
@@ -12091,7 +12327,6 @@ CONTENT['shodan-recon'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Shodan API -> Banner Grabs -> Exposed Infrastructure</text></svg>",
     "steps": [
       {
         "icon": "\ud83d\udce1",
@@ -12118,24 +12353,44 @@ CONTENT['shodan-recon'] = {
   "enterprise": {
     "role": "Vulnerability Analyst | Vulnerability Management Team",
     "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; Vulnerability Management Lead &rarr; You<br><br><b>Business Context:</b><br>Threat Intelligence reports an active exploitation campaign targeting exposed RDP servers. You must ensure GFS has no exposed RDP endpoints on the public internet.",
-    "challenge": "<b>Mission Brief:</b><br>Query Shodan for GFS IP ranges to identify any exposed remote access services.<br><br><b>Objectives:</b><br>- Identify exposed RDP (3389).<br>- Identify exposed SSH (22).<br><br><b>Expected Deliverables:</b><br>A list of exposed endpoints that require immediate firewall blocking."
+    "challenge": "<b>Mission Brief:</b><br>Query Shodan for GFS IP ranges to identify any exposed remote access services.<br><br><b>Objectives:</b><br>- Identify exposed RDP (3389).<br>- Identify exposed SSH (22).<br><br><b>Expected Deliverables:</b><br>A list of exposed endpoints that require immediate firewall blocking.",
+    "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+    "lesson": "Always validate external exposure before adversaries do."
   },
-  "commands": [
-    {
-      "win": "shodan search org:\"Target\" port:3389",
-      "lin": "shodan search org:\"Target\" port:3389",
-      "desc": "Find Exposed RDP",
-      "out": "List of IPs running RDP",
-      "note": "Enterprise Use: Vulnerability Analysts use this to find exposed remote access."
-    },
-    {
-      "win": "shodan host [IP]",
-      "lin": "shodan host [IP]",
-      "desc": "Analyze Specific IP",
-      "out": "Detailed banner information for the IP",
-      "note": "Enterprise Use: Incident Responders use this to see what an IP was exposing."
-    }
-  ],
+  "commands": {
+    "win": [
+      {
+        "command": "shodan search org:\"Target\" port:3389",
+        "purpose": "Find Exposed RDP",
+        "expected": "List of IPs running RDP",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Vulnerability Analysts use this to find exposed remote access."
+      },
+      {
+        "command": "shodan host [IP]",
+        "purpose": "Analyze Specific IP",
+        "expected": "Detailed banner information for the IP",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Incident Responders use this to see what an IP was exposing."
+      }
+    ],
+    "lin": [
+      {
+        "command": "shodan search org:\"Target\" port:3389",
+        "purpose": "Find Exposed RDP",
+        "expected": "List of IPs running RDP",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Vulnerability Analysts use this to find exposed remote access."
+      },
+      {
+        "command": "shodan host [IP]",
+        "purpose": "Analyze Specific IP",
+        "expected": "Detailed banner information for the IP",
+        "mitre": "T1590",
+        "analystNote": "Enterprise Use: Incident Responders use this to see what an IP was exposing."
+      }
+    ]
+  },
   "lab": {
     "title": "Exposed Infrastructure Sweep",
     "difficulty": "Beginner",
@@ -12312,7 +12567,47 @@ CONTENT['shodan-recon'] = {
       "f": "Shodan",
       "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
     }
-  ]
+  ],
+  "meta": {
+    "version": "2.0",
+    "estimatedTime": "45 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "Module 01 - Intro to Ethical Hacking"
+    ],
+    "lastReviewed": "2026-07-21"
+  },
+  "objectives": [
+    "Master the fundamental concepts.",
+    "Apply tools in an enterprise context.",
+    "Validate knowledge through practical assessment."
+  ],
+  "pitfalls": [
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Relying solely on automated tools",
+      "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+      "fix": "Always manually verify the output of automated scanners against raw data."
+    },
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Violating Rules of Engagement (ROE)",
+      "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+      "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+    }
+  ],
+  "summary": [
+    "Reconnaissance is the foundation of all successful engagements.",
+    "Passive OSINT provides stealthy insights without triggering alerts.",
+    "Always cross-reference multiple data sources to eliminate false positives.",
+    "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+  ],
+  "ctf": {
+    "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+    "hint": "Look for Base64 encoded strings in the configuration block.",
+    "flag": "CEH{r3c0n_m4st3r}",
+    "points": 200
+  }
 };
 
 CONTENT['social-media-recon'] = {
@@ -12332,7 +12627,6 @@ CONTENT['social-media-recon'] = {
   },
   "diagram": {
     "title": "Architecture & Flow",
-    "svg": "<svg width=\"100%\" height=\"200\" viewBox=\"0 0 600 200\" style=\"background:#0a0a0f;border:1px solid #1a1a24;border-radius:8px;\"><text x=\"300\" y=\"100\" fill=\"#00aaff\" font-family=\"monospace\" font-size=\"14\" text-anchor=\"middle\">Analyst -> Social Media Profiles -> Org Chart & Tech Stack</text></svg>",
     "steps": [
       {
         "icon": "\ud83d\udc65",
@@ -12359,17 +12653,14 @@ CONTENT['social-media-recon'] = {
   "enterprise": {
     "role": "Insider Threat Analyst | Security Operations",
     "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; Insider Threat Team Lead &rarr; You<br><br><b>Business Context:</b><br>A new IT Administrator was recently hired. You have been tasked with conducting an Open Source background sweep to ensure they are not exposing sensitive GFS architecture details online.",
-    "challenge": "<b>Mission Brief:</b><br>Review the social media footprint of the new IT Admin for OPSEC violations.<br><br><b>Objectives:</b><br>- Review LinkedIn for excessive technology disclosure.<br>- Review Twitter for complaints about internal security policies.<br><br><b>Expected Deliverables:</b><br>An OPSEC risk report detailing what the employee is exposing."
+    "challenge": "<b>Mission Brief:</b><br>Review the social media footprint of the new IT Admin for OPSEC violations.<br><br><b>Objectives:</b><br>- Review LinkedIn for excessive technology disclosure.<br>- Review Twitter for complaints about internal security policies.<br><br><b>Expected Deliverables:</b><br>An OPSEC risk report detailing what the employee is exposing.",
+    "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+    "lesson": "Always validate external exposure before adversaries do."
   },
-  "commands": [
-    {
-      "win": "N/A (Browser-based)",
-      "lin": "N/A (Browser-based)",
-      "desc": "LinkedIn Enumeration",
-      "out": "Employee roles and tech stack",
-      "note": "Enterprise Use: Red Teams use this to map out the IT department."
-    }
-  ],
+  "commands": {
+    "win": [],
+    "lin": []
+  },
   "lab": {
     "title": "OPSEC Violation Sweep",
     "difficulty": "Beginner",
@@ -12546,8 +12837,50 @@ CONTENT['social-media-recon'] = {
       "f": "SOCMINT",
       "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
     }
-  ]
+  ],
+  "meta": {
+    "version": "2.0",
+    "estimatedTime": "45 min",
+    "difficulty": "Intermediate",
+    "prerequisites": [
+      "Module 01 - Intro to Ethical Hacking"
+    ],
+    "lastReviewed": "2026-07-21"
+  },
+  "objectives": [
+    "Master the fundamental concepts.",
+    "Apply tools in an enterprise context.",
+    "Validate knowledge through practical assessment."
+  ],
+  "pitfalls": [
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Relying solely on automated tools",
+      "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+      "fix": "Always manually verify the output of automated scanners against raw data."
+    },
+    {
+      "icon": "\u26a0\ufe0f",
+      "title": "Violating Rules of Engagement (ROE)",
+      "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+      "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+    }
+  ],
+  "summary": [
+    "Reconnaissance is the foundation of all successful engagements.",
+    "Passive OSINT provides stealthy insights without triggering alerts.",
+    "Always cross-reference multiple data sources to eliminate false positives.",
+    "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+  ],
+  "ctf": {
+    "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+    "hint": "Look for Base64 encoded strings in the configuration block.",
+    "flag": "CEH{r3c0n_m4st3r}",
+    "points": 200
+  }
 };
+
+
 
 
 

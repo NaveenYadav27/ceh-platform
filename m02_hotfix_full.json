@@ -1,0 +1,1765 @@
+[
+  {
+    "id": "footprinting-concepts",
+    "module": "Module 02 - Footprinting & Reconnaissance",
+    "title": "Footprinting Concepts",
+    "sub": "The foundation of reconnaissance and external asset discovery.",
+    "killchain": {
+      "phase": "Reconnaissance",
+      "mitre": "TA0043"
+    },
+    "learn": {
+      "simple": "<b>Definition:</b> Footprinting is the initial phase of the ethical hacking process where you passively and actively gather as much information as possible about a target system to understand its security posture.<br><br><b>Simple Explanation:</b> It's like casing a building before a heist\u2014figuring out where the doors are, who the guards are, and what security systems are in place without touching the building.",
+      "analogy": "If a network is a fortress, footprinting is reading the blueprints, analyzing the surrounding roads, and observing shift changes from afar.",
+      "why": "<b>Why This Exists:</b> To map the attack surface so defenders can understand exactly what assets are exposed to the public internet.<br><br><b>Business Impact:</b> Unmapped assets lead to shadow IT, meaning attackers can breach unmonitored systems that the business forgot existed.<br><br><b>Career Confidence:</b> Recon is 80% of an engagement. Missing a subdomain means missing the entry point.<br><i>Roles:</i> Threat Intelligence Analyst, Penetration Tester, OSINT Analyst<br><i>Interview:</i> How do you differentiate between passive and active footprinting?",
+      "architecture": "1. Gather target details (domains, IPs).<br>2. Query public records (WHOIS, DNS).<br>3. Search open sources (Search Engines, Social Media).<br>4. Analyze network range."
+    },
+    "diagram": {
+      "title": "Architecture & Flow",
+      "steps": [
+        {
+          "icon": "\ud83d\udd75\ufe0f",
+          "label": "Define Target Scope",
+          "desc": "Identify domains, IP ranges, and organizational parameters."
+        },
+        {
+          "icon": "\ud83c\udf10",
+          "label": "Passive Recon",
+          "desc": "Gather information from public sources without direct interaction."
+        },
+        {
+          "icon": "\ud83d\udd0d",
+          "label": "Active Recon",
+          "desc": "Directly query target servers (e.g., DNS, Whois) for detailed info."
+        },
+        {
+          "icon": "\ud83d\udcca",
+          "label": "Analyze Data",
+          "desc": "Compile findings to map the external attack surface."
+        }
+      ]
+    },
+    "enterprise": {
+      "role": "Threat Intelligence Analyst | SOC Team",
+      "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; SOC Manager &rarr; SOC Team &rarr; You<br><br><b>Business Context:</b><br>GFS just acquired a new subsidiary and we must map their external perimeter to identify inherited risks.",
+      "challenge": "<b>Mission Brief:</b><br>Identify all publicly exposed assets belonging to the newly acquired subsidiary before integration.<br><br><b>Objectives:</b><br>- Identify root domain ownership.<br>- Map external IP ranges.<br>- Enumerate exposed subdomains.<br><br><b>Expected Deliverables:</b><br>A consolidated report mapping the external asset perimeter of the subsidiary.",
+      "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+      "lesson": "Always validate external exposure before adversaries do."
+    },
+    "commands": {
+      "win": [
+        {
+          "command": "nslookup target.com",
+          "purpose": "DNS Resolution",
+          "expected": "IP addresses of target.com",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: SOC Analysts use this to verify domain routing."
+        },
+        {
+          "command": "ping target.com",
+          "purpose": "Host Discovery",
+          "expected": "ICMP Echo Replies",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Network Engineers use this to verify host liveness."
+        }
+      ],
+      "lin": [
+        {
+          "command": "dig target.com",
+          "purpose": "DNS Resolution",
+          "expected": "IP addresses of target.com",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: SOC Analysts use this to verify domain routing."
+        },
+        {
+          "command": "ping -c 4 target.com",
+          "purpose": "Host Discovery",
+          "expected": "ICMP Echo Replies",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Network Engineers use this to verify host liveness."
+        }
+      ]
+    },
+    "lab": {
+      "title": "Perimeter Mapping Challenge",
+      "difficulty": "Beginner",
+      "duration": "20",
+      "platform": "Kali / Win",
+      "scenario": "<b>Mission Brief:</b><br>The CISO needs a quick readout on the new subsidiary's public footprint.<br><br><b>Objectives:</b><br>Run a WHOIS lookup and resolve the primary domain.<br><br><b>Evidence Required:</b><br>Screenshots of WHOIS registration and DNS resolution output.<br><br><i>Execute the terminal steps below.</i><br><br><b>Deliverables:</b><br>A validated list of IP addresses tied to the subsidiary.<br><br><b>Manager Feedback:</b><br>Good job mapping the perimeter. Next time, ensure we also check historical WHOIS records.",
+      "steps": [
+        "<strong>Objectives:</strong> Determine the external IP range.",
+        "<strong>Enterprise Workspace:</strong> Open the Linux Terminal.",
+        "Type `whois globalfinsec.com` and press Enter.",
+        "Type `host globalfinsec.com` and press Enter."
+      ]
+    },
+    "quiz": [
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is the primary objective of Footprinting?",
+        "opts": [
+          "Exploitation",
+          "Mapping attack surface",
+          "Patching",
+          "Malware Analysis"
+        ],
+        "correct": 1,
+        "fb": "Footprinting maps the attack surface.",
+        "difficulty": "Foundation"
+      }
+    ],
+    "flashcards": [
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      },
+      {
+        "f": "What is Passive Footprinting?",
+        "b": "<b>Definition:</b> Gathering data without direct interaction.<br><b>Enterprise Example:</b> Checking WHOIS records.<br><b>Interview Tip:</b> Emphasize stealth and opsec."
+      }
+    ],
+    "meta": {
+      "version": "2.0",
+      "estimatedTime": "45 min",
+      "difficulty": "Intermediate",
+      "prerequisites": [
+        "Module 01 - Intro to Ethical Hacking"
+      ],
+      "lastReviewed": "2026-07-21"
+    },
+    "objectives": [
+      "Master the fundamental concepts.",
+      "Apply tools in an enterprise context.",
+      "Validate knowledge through practical assessment."
+    ],
+    "pitfalls": [
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Relying solely on automated tools",
+        "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+        "fix": "Always manually verify the output of automated scanners against raw data."
+      },
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Violating Rules of Engagement (ROE)",
+        "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+        "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+      }
+    ],
+    "summary": [
+      "Reconnaissance is the foundation of all successful engagements.",
+      "Passive OSINT provides stealthy insights without triggering alerts.",
+      "Always cross-reference multiple data sources to eliminate false positives.",
+      "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+    ],
+    "ctf": {
+      "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+      "hint": "Look for Base64 encoded strings in the configuration block.",
+      "flag": "CEH{r3c0n_m4st3r}",
+      "points": 200
+    }
+  },
+  {
+    "id": "osint-techniques",
+    "module": "Module 02 - Footprinting & Reconnaissance",
+    "title": "OSINT Techniques",
+    "sub": "Leveraging publicly available information for intelligence gathering.",
+    "killchain": {
+      "phase": "Reconnaissance",
+      "mitre": "TA0043"
+    },
+    "learn": {
+      "simple": "<b>Definition:</b> OSINT involves collecting and analyzing publicly available data to gather intelligence about a target organization, its employees, and its infrastructure.<br><br><b>Simple Explanation:</b> It's like being a digital private investigator, piecing together a puzzle from public records, news articles, and corporate filings.",
+      "analogy": "Like piecing together someone's daily routine entirely from their public Instagram posts and LinkedIn updates.",
+      "why": "<b>Why This Exists:</b> To identify what sensitive information an organization is leaking to the public internet unintentionally.<br><br><b>Business Impact:</b> Exposed organizational charts or technical documentation can be used by attackers to craft highly convincing spear-phishing campaigns.<br><br><b>Career Confidence:</b> OSINT is a fundamental skill for threat intel analysts who track adversary infrastructure.<br><i>Roles:</i> Threat Intelligence Analyst, OSINT Analyst, Social Engineering Expert<br><i>Interview:</i> Can you name three distinct sources of OSINT?",
+      "architecture": "1. Define intelligence requirements.<br>2. Collect raw data from search engines, social media, and public records.<br>3. Process and filter the data.<br>4. Analyze for actionable intelligence."
+    },
+    "diagram": {
+      "title": "Architecture & Flow",
+      "steps": [
+        {
+          "icon": "\ud83c\udfaf",
+          "label": "Identify Intelligence Needs",
+          "desc": "Define what information is required (e.g., emails, docs)."
+        },
+        {
+          "icon": "\ud83d\udd78\ufe0f",
+          "label": "Harvest Data",
+          "desc": "Use tools like theHarvester to scrape search engines and APIs."
+        },
+        {
+          "icon": "\ud83e\udde0",
+          "label": "Process & Filter",
+          "desc": "Remove false positives and irrelevant information."
+        },
+        {
+          "icon": "\ud83d\udcc8",
+          "label": "Develop Pretext",
+          "desc": "Use the intelligence to craft realistic social engineering scenarios."
+        }
+      ]
+    },
+    "enterprise": {
+      "role": "OSINT Analyst | Threat Intelligence Team",
+      "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; Threat Intel Lead &rarr; You<br><br><b>Business Context:</b><br>The CISO wants a defensive OSINT sweep of the executive team to identify potential spear-phishing vectors.",
+      "challenge": "<b>Mission Brief:</b><br>Conduct an OSINT investigation on key executives to identify exposed personal identifiers.<br><br><b>Objectives:</b><br>- Discover exposed email addresses.<br>- Identify public document leaks.<br><br><b>Expected Deliverables:</b><br>An executive exposure report detailing leaked credentials or sensitive documents.",
+      "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+      "lesson": "Always validate external exposure before adversaries do."
+    },
+    "commands": {
+      "win": [
+        {
+          "command": "theharvester -d target.com -b google",
+          "purpose": "Email Harvesting",
+          "expected": "List of discovered email addresses",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Pen Testers use this to build target lists for phishing."
+        },
+        {
+          "command": "curl -s https://crt.sh/?q=target.com",
+          "purpose": "Certificate Search",
+          "expected": "List of subdomains from certs",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Bug Bounty hunters use this to find hidden infrastructure."
+        }
+      ],
+      "lin": [
+        {
+          "command": "theHarvester -d target.com -b google",
+          "purpose": "Email Harvesting",
+          "expected": "List of discovered email addresses",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Pen Testers use this to build target lists for phishing."
+        },
+        {
+          "command": "curl -s \"https://crt.sh/?q=target.com&output=json\"",
+          "purpose": "Certificate Search",
+          "expected": "List of subdomains from certs",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Bug Bounty hunters use this to find hidden infrastructure."
+        }
+      ]
+    },
+    "lab": {
+      "title": "Executive Exposure Sweep",
+      "difficulty": "Beginner",
+      "duration": "20",
+      "platform": "Kali / Win",
+      "scenario": "<b>Mission Brief:</b><br>Sweep the internet for any exposed email addresses belonging to our executive team.<br><br><b>Objectives:</b><br>Use theHarvester to find emails associated with globalfinsec.com.<br><br><b>Evidence Required:</b><br>Screenshot of theHarvester output showing at least 3 emails.<br><br><i>Execute the terminal steps below.</i><br><br><b>Deliverables:</b><br>A list of the discovered email addresses.<br><br><b>Manager Feedback:</b><br>Good finds. We need to enroll these executives in targeted anti-phishing training immediately.",
+      "steps": [
+        "<strong>Objectives:</strong> Find exposed employee emails.",
+        "<strong>Enterprise Workspace:</strong> Open the Linux Terminal.",
+        "Type `theHarvester -d globalfinsec.com -b all` and press Enter."
+      ]
+    },
+    "quiz": [
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does OSINT stand for?",
+        "opts": [
+          "Open Source Intelligence",
+          "Operational System Integration",
+          "Online Security Information",
+          "Offensive Security Intelligence"
+        ],
+        "correct": 0,
+        "fb": "OSINT relies on publicly available sources.",
+        "difficulty": "Foundation"
+      }
+    ],
+    "flashcards": [
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      },
+      {
+        "f": "theHarvester",
+        "b": "<b>Definition:</b> A tool for gathering emails and subdomains.<br><b>Enterprise Example:</b> Building phishing target lists.<br><b>Interview Tip:</b> Mention it queries search engines passively."
+      }
+    ],
+    "meta": {
+      "version": "2.0",
+      "estimatedTime": "45 min",
+      "difficulty": "Intermediate",
+      "prerequisites": [
+        "Module 01 - Intro to Ethical Hacking"
+      ],
+      "lastReviewed": "2026-07-21"
+    },
+    "objectives": [
+      "Master the fundamental concepts.",
+      "Apply tools in an enterprise context.",
+      "Validate knowledge through practical assessment."
+    ],
+    "pitfalls": [
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Relying solely on automated tools",
+        "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+        "fix": "Always manually verify the output of automated scanners against raw data."
+      },
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Violating Rules of Engagement (ROE)",
+        "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+        "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+      }
+    ],
+    "summary": [
+      "Reconnaissance is the foundation of all successful engagements.",
+      "Passive OSINT provides stealthy insights without triggering alerts.",
+      "Always cross-reference multiple data sources to eliminate false positives.",
+      "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+    ],
+    "ctf": {
+      "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+      "hint": "Look for Base64 encoded strings in the configuration block.",
+      "flag": "CEH{r3c0n_m4st3r}",
+      "points": 200
+    }
+  },
+  {
+    "id": "whois-dns",
+    "module": "Module 02 - Footprinting & Reconnaissance",
+    "title": "Whois & DNS Footprinting",
+    "sub": "Extracting infrastructure details from domain registrars and DNS servers.",
+    "killchain": {
+      "phase": "Reconnaissance",
+      "mitre": "TA0043"
+    },
+    "learn": {
+      "simple": "<b>Definition:</b> DNS enumeration is the process of locating all DNS servers and their corresponding records for an organization. WHOIS provides registration and contact details.<br><br><b>Simple Explanation:</b> It's like looking up a company in the phone book to find out where they are located, who owns the building, and what other branches they have.",
+      "analogy": "DNS is the internet's GPS. DNS footprinting is asking the GPS for a list of every single location a company owns.",
+      "why": "<b>Why This Exists:</b> To discover the external IP addresses and mail servers that an organization relies on.<br><br><b>Business Impact:</b> Misconfigured DNS can leak internal network structures (zone transfers) or lead to domain hijacking.<br><br><b>Career Confidence:</b> Understanding DNS is non-negotiable for any network or security engineering role.<br><i>Roles:</i> Network Security Engineer, Penetration Tester<br><i>Interview:</i> What is a DNS Zone Transfer and why is it dangerous?",
+      "architecture": "1. Query WHOIS for domain ownership.<br>2. Identify Authoritative Name Servers.<br>3. Query for specific records (A, MX, TXT).<br>4. Attempt a Zone Transfer (AXFR)."
+    },
+    "diagram": {
+      "title": "Architecture & Flow",
+      "steps": [
+        {
+          "icon": "\ud83d\udcdd",
+          "label": "Query WHOIS",
+          "desc": "Determine domain ownership, registrar, and administrative contacts."
+        },
+        {
+          "icon": "\ud83d\udda5\ufe0f",
+          "label": "Identify Name Servers",
+          "desc": "Locate the authoritative DNS servers for the target domain."
+        },
+        {
+          "icon": "\ud83d\udcdc",
+          "label": "Enumerate Records",
+          "desc": "Query for A, MX, TXT, and CNAME records to map infrastructure."
+        },
+        {
+          "icon": "\ud83d\udea8",
+          "label": "Test Zone Transfer",
+          "desc": "Attempt AXFR to see if the server leaks its entire zone file."
+        }
+      ]
+    },
+    "enterprise": {
+      "role": "Network Security Engineer | Infrastructure Team",
+      "situation": "<b>Organization Context:</b><br>CEO &rarr; CIO &rarr; Network Operations Director &rarr; You<br><br><b>Business Context:</b><br>A recent audit flagged potential DNS misconfigurations in a legacy GFS domain. You must verify if zone transfers are disabled.",
+      "challenge": "<b>Mission Brief:</b><br>Perform a comprehensive DNS footprint of our legacy domains to ensure no internal records are leaking.<br><br><b>Objectives:</b><br>- Identify name servers.<br>- Attempt AXFR to verify security controls.<br><br><b>Expected Deliverables:</b><br>A DNS security posture report.",
+      "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+      "lesson": "Always validate external exposure before adversaries do."
+    },
+    "commands": {
+      "win": [
+        {
+          "command": "nslookup -type=mx target.com",
+          "purpose": "Find Mail Servers",
+          "expected": "List of MX records",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Used to identify email infrastructure for social engineering."
+        },
+        {
+          "command": "nslookup -type=any -ls target.com",
+          "purpose": "Zone Transfer",
+          "expected": "Full DNS zone dump if vulnerable",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Red Teams use this to instantly map an entire network."
+        }
+      ],
+      "lin": [
+        {
+          "command": "host -t mx target.com",
+          "purpose": "Find Mail Servers",
+          "expected": "List of MX records",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Used to identify email infrastructure for social engineering."
+        },
+        {
+          "command": "dig axfr @ns1.target.com target.com",
+          "purpose": "Zone Transfer",
+          "expected": "Full DNS zone dump if vulnerable",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Red Teams use this to instantly map an entire network."
+        }
+      ]
+    },
+    "lab": {
+      "title": "Zone Transfer Audit",
+      "difficulty": "Beginner",
+      "duration": "20",
+      "platform": "Kali / Win",
+      "scenario": "<b>Mission Brief:</b><br>Check if our legacy domain is vulnerable to a zone transfer.<br><br><b>Objectives:</b><br>Attempt a zone transfer against the legacy name server.<br><br><b>Evidence Required:</b><br>Screenshot showing the 'Transfer failed' or the dumped records.<br><br><i>Execute the terminal steps below.</i><br><br><b>Deliverables:</b><br>Confirmation of whether the server is properly secured.<br><br><b>Manager Feedback:</b><br>Good verification. We need to ensure strict ACLs are applied to all our name servers.",
+      "steps": [
+        "<strong>Objectives:</strong> Test for AXFR vulnerability.",
+        "<strong>Enterprise Workspace:</strong> Open the Linux Terminal.",
+        "Type `host -t ns globalfinsec.com` to find the nameserver.",
+        "Type `dig axfr @ns1.globalfinsec.com globalfinsec.com` and press Enter."
+      ]
+    },
+    "quiz": [
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What command initiates a DNS zone transfer in dig?",
+        "opts": [
+          "axfr",
+          "zxfr",
+          "transfer",
+          "mx"
+        ],
+        "correct": 0,
+        "fb": "AXFR stands for Authoritative Zone Transfer.",
+        "difficulty": "Foundation"
+      }
+    ],
+    "flashcards": [
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      },
+      {
+        "f": "DNS Zone Transfer (AXFR)",
+        "b": "<b>Definition:</b> Replicating DNS databases across servers.<br><b>Enterprise Example:</b> Attackers dumping internal IP schemas.<br><b>Interview Tip:</b> It should be restricted to trusted secondary servers only."
+      }
+    ],
+    "meta": {
+      "version": "2.0",
+      "estimatedTime": "45 min",
+      "difficulty": "Intermediate",
+      "prerequisites": [
+        "Module 01 - Intro to Ethical Hacking"
+      ],
+      "lastReviewed": "2026-07-21"
+    },
+    "objectives": [
+      "Master the fundamental concepts.",
+      "Apply tools in an enterprise context.",
+      "Validate knowledge through practical assessment."
+    ],
+    "pitfalls": [
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Relying solely on automated tools",
+        "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+        "fix": "Always manually verify the output of automated scanners against raw data."
+      },
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Violating Rules of Engagement (ROE)",
+        "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+        "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+      }
+    ],
+    "summary": [
+      "Reconnaissance is the foundation of all successful engagements.",
+      "Passive OSINT provides stealthy insights without triggering alerts.",
+      "Always cross-reference multiple data sources to eliminate false positives.",
+      "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+    ],
+    "ctf": {
+      "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+      "hint": "Look for Base64 encoded strings in the configuration block.",
+      "flag": "CEH{r3c0n_m4st3r}",
+      "points": 200
+    }
+  },
+  {
+    "id": "google-hacking",
+    "module": "Module 02 - Footprinting & Reconnaissance",
+    "title": "Google Hacking (Dorking)",
+    "sub": "Using advanced search operators to find hidden data.",
+    "killchain": {
+      "phase": "Reconnaissance",
+      "mitre": "TA0043"
+    },
+    "learn": {
+      "simple": "<b>Definition:</b> Google Hacking (Dorking) uses advanced search engine operators to locate specific strings of text within search results, often uncovering sensitive files or vulnerable applications that were unintentionally indexed.<br><br><b>Simple Explanation:</b> It's like using highly specific filters in a library catalog to find the exact page of a book where a secret code is written, instead of just searching for the book title.",
+      "analogy": "Imagine searching a massive warehouse. A normal search is asking 'Where are the boxes?' Dorking is asking 'Show me only red boxes, containing financial documents, modified in the last 24 hours.'",
+      "why": "<b>Why This Exists:</b> To discover exposed files, directories, and vulnerabilities that search engine crawlers have already found and indexed.<br><br><b>Business Impact:</b> Accidental exposure of sensitive files (like SQL backups or configuration files with passwords) leads to immediate, zero-effort breaches.<br><br><b>Career Confidence:</b> Dorking is a crucial, zero-cost reconnaissance skill that often yields high-value targets instantly.<br><i>Roles:</i> Data Security Analyst, Penetration Tester, Bug Bounty Hunter<br><i>Interview:</i> What does the 'filetype' and 'site' operator do in a Google Dork?",
+      "architecture": "1. Identify target domain.<br>2. Formulate Dork queries (e.g., site:target.com filetype:pdf).<br>3. Analyze search engine results.<br>4. Extract exposed data."
+    },
+    "diagram": {
+      "title": "Architecture & Flow",
+      "steps": [
+        {
+          "icon": "\ud83d\udd0e",
+          "label": "Select Target Domain",
+          "desc": "Use the site: operator to restrict searches."
+        },
+        {
+          "icon": "\ud83d\udee0\ufe0f",
+          "label": "Apply Dorks",
+          "desc": "Use filetype:, intitle:, or inurl: to find specific vulnerabilities."
+        },
+        {
+          "icon": "\ud83d\udc40",
+          "label": "Review SERPs",
+          "desc": "Analyze the search engine results pages for exposed data."
+        },
+        {
+          "icon": "\ud83d\udce5",
+          "label": "Extract Intel",
+          "desc": "Download exposed backups, passwords, or PII."
+        }
+      ]
+    },
+    "enterprise": {
+      "role": "Data Security Analyst | Data Privacy Team",
+      "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; Data Privacy Officer &rarr; You<br><br><b>Business Context:</b><br>The Data Privacy Officer is concerned that legacy PDF reports containing PII might have been indexed by search engines.",
+      "challenge": "<b>Mission Brief:</b><br>Perform Google Dorking against GFS domains to identify any indexed sensitive documents.<br><br><b>Objectives:</b><br>- Locate exposed PDFs or DOCs.<br>- Identify exposed directory listings.<br><br><b>Expected Deliverables:</b><br>A list of URLs pointing to exposed sensitive files that need to be de-indexed.",
+      "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+      "lesson": "Always validate external exposure before adversaries do."
+    },
+    "commands": {
+      "win": [
+        {
+          "command": "site:target.com filetype:pdf",
+          "purpose": "Find PDFs",
+          "expected": "Search results limited to PDFs on target.com",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Data Privacy teams use this to find leaked documents."
+        },
+        {
+          "command": "intitle:\"index of\" site:target.com",
+          "purpose": "Find Directory Listings",
+          "expected": "Exposed web directories",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Pen Testers use this to find exposed file repositories."
+        }
+      ],
+      "lin": [
+        {
+          "command": "site:target.com filetype:pdf",
+          "purpose": "Find PDFs",
+          "expected": "Search results limited to PDFs on target.com",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Data Privacy teams use this to find leaked documents."
+        },
+        {
+          "command": "intitle:\"index of\" site:target.com",
+          "purpose": "Find Directory Listings",
+          "expected": "Exposed web directories",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Pen Testers use this to find exposed file repositories."
+        }
+      ]
+    },
+    "lab": {
+      "title": "Data Leak Discovery",
+      "difficulty": "Beginner",
+      "duration": "20",
+      "platform": "Kali / Win",
+      "scenario": "<b>Mission Brief:</b><br>Search for exposed configuration files on the GFS domain.<br><br><b>Objectives:</b><br>Use Dorks to find .env or .bak files.<br><br><b>Evidence Required:</b><br>Screenshot of search results showing exposed files.<br><br><i>Execute the terminal steps below.</i><br><br><b>Deliverables:</b><br>List of exposed URLs.<br><br><b>Manager Feedback:</b><br>Critical find. We will initiate a takedown request and secure those directories immediately.",
+      "steps": [
+        "<strong>Objectives:</strong> Find exposed config files.",
+        "<strong>Enterprise Workspace:</strong> Open the Web Browser.",
+        "Navigate to Google.com.",
+        "Search for `site:globalfinsec.com ext:env OR ext:bak`."
+      ]
+    },
+    "quiz": [
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "Which operator restricts results to a specific domain?",
+        "opts": [
+          "domain:",
+          "site:",
+          "inurl:",
+          "host:"
+        ],
+        "correct": 1,
+        "fb": "The site: operator is used for this.",
+        "difficulty": "Foundation"
+      }
+    ],
+    "flashcards": [
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      },
+      {
+        "f": "Google Dorking",
+        "b": "<b>Definition:</b> Using advanced operators to find hidden data.<br><b>Enterprise Example:</b> Finding exposed .sql backups.<br><b>Interview Tip:</b> Explain how crawlers index unprotected directories."
+      }
+    ],
+    "meta": {
+      "version": "2.0",
+      "estimatedTime": "45 min",
+      "difficulty": "Intermediate",
+      "prerequisites": [
+        "Module 01 - Intro to Ethical Hacking"
+      ],
+      "lastReviewed": "2026-07-21"
+    },
+    "objectives": [
+      "Master the fundamental concepts.",
+      "Apply tools in an enterprise context.",
+      "Validate knowledge through practical assessment."
+    ],
+    "pitfalls": [
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Relying solely on automated tools",
+        "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+        "fix": "Always manually verify the output of automated scanners against raw data."
+      },
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Violating Rules of Engagement (ROE)",
+        "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+        "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+      }
+    ],
+    "summary": [
+      "Reconnaissance is the foundation of all successful engagements.",
+      "Passive OSINT provides stealthy insights without triggering alerts.",
+      "Always cross-reference multiple data sources to eliminate false positives.",
+      "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+    ],
+    "ctf": {
+      "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+      "hint": "Look for Base64 encoded strings in the configuration block.",
+      "flag": "CEH{r3c0n_m4st3r}",
+      "points": 200
+    }
+  },
+  {
+    "id": "shodan-recon",
+    "module": "Module 02 - Footprinting & Reconnaissance",
+    "title": "Shodan & Network Recon",
+    "sub": "Search engines for IoT and internet-connected devices.",
+    "killchain": {
+      "phase": "Reconnaissance",
+      "mitre": "TA0043"
+    },
+    "learn": {
+      "simple": "<b>Definition:</b> Asset discovery involves using specialized search engines like Shodan to find specific devices, open ports, and vulnerable services connected to the public internet.<br><br><b>Simple Explanation:</b> While Google searches for websites and text, Shodan searches for servers, webcams, routers, and industrial control systems based on their IP addresses and open ports.",
+      "analogy": "Google searches the contents of the billboards; Shodan searches for the make and model of the billboard structure itself.",
+      "why": "<b>Why This Exists:</b> To identify misconfigured or unpatched infrastructure that is directly accessible from the internet.<br><br><b>Business Impact:</b> An exposed RDP port or unauthenticated database found on Shodan is often the primary vector for ransomware gangs.<br><br><b>Career Confidence:</b> Vulnerability Analysts rely heavily on Shodan to rapidly identify if their organization is affected by newly announced vulnerabilities.<br><i>Roles:</i> Vulnerability Analyst, Threat Hunter, Penetration Tester<br><i>Interview:</i> How does Shodan differ from Google?",
+      "architecture": "1. Shodan actively scans the internet.<br>2. It grabs service banners.<br>3. It indexes the banners.<br>4. Analysts query the index for specific ports, protocols, or vulnerabilities."
+    },
+    "diagram": {
+      "title": "Architecture & Flow",
+      "steps": [
+        {
+          "icon": "\ud83d\udce1",
+          "label": "Query Shodan",
+          "desc": "Search by organization name, IP, or specific product."
+        },
+        {
+          "icon": "\ud83d\udea9",
+          "label": "Analyze Banners",
+          "desc": "Review the returned service banners for version numbers."
+        },
+        {
+          "icon": "\ud83d\udd13",
+          "label": "Identify Vulns",
+          "desc": "Cross-reference exposed versions with known CVEs."
+        },
+        {
+          "icon": "\ud83d\udee1\ufe0f",
+          "label": "Remediate",
+          "desc": "Ensure firewalls block public access to these sensitive ports."
+        }
+      ]
+    },
+    "enterprise": {
+      "role": "Vulnerability Analyst | Vulnerability Management Team",
+      "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; Vulnerability Management Lead &rarr; You<br><br><b>Business Context:</b><br>Threat Intelligence reports an active exploitation campaign targeting exposed RDP servers. You must ensure GFS has no exposed RDP endpoints on the public internet.",
+      "challenge": "<b>Mission Brief:</b><br>Query Shodan for GFS IP ranges to identify any exposed remote access services.<br><br><b>Objectives:</b><br>- Identify exposed RDP (3389).<br>- Identify exposed SSH (22).<br><br><b>Expected Deliverables:</b><br>A list of exposed endpoints that require immediate firewall blocking.",
+      "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+      "lesson": "Always validate external exposure before adversaries do."
+    },
+    "commands": {
+      "win": [
+        {
+          "command": "shodan search org:\"Target\" port:3389",
+          "purpose": "Find Exposed RDP",
+          "expected": "List of IPs running RDP",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Vulnerability Analysts use this to find exposed remote access."
+        },
+        {
+          "command": "shodan host [IP]",
+          "purpose": "Analyze Specific IP",
+          "expected": "Detailed banner information for the IP",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Incident Responders use this to see what an IP was exposing."
+        }
+      ],
+      "lin": [
+        {
+          "command": "shodan search org:\"Target\" port:3389",
+          "purpose": "Find Exposed RDP",
+          "expected": "List of IPs running RDP",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Vulnerability Analysts use this to find exposed remote access."
+        },
+        {
+          "command": "shodan host [IP]",
+          "purpose": "Analyze Specific IP",
+          "expected": "Detailed banner information for the IP",
+          "mitre": "T1590",
+          "analystNote": "Enterprise Use: Incident Responders use this to see what an IP was exposing."
+        }
+      ]
+    },
+    "lab": {
+      "title": "Exposed Infrastructure Sweep",
+      "difficulty": "Beginner",
+      "duration": "20",
+      "platform": "Kali / Win",
+      "scenario": "<b>Mission Brief:</b><br>Ensure GFS has no exposed databases.<br><br><b>Objectives:</b><br>Use Shodan to search for exposed MongoDB instances within our IP range.<br><br><b>Evidence Required:</b><br>Screenshot of the Shodan search results.<br><br><i>Execute the terminal steps below.</i><br><br><b>Deliverables:</b><br>List of exposed database IPs.<br><br><b>Manager Feedback:</b><br>Great work. We will isolate these databases immediately.",
+      "steps": [
+        "<strong>Objectives:</strong> Find exposed databases.",
+        "<strong>Enterprise Workspace:</strong> Open the Web Browser.",
+        "Navigate to shodan.io.",
+        "Search for `org:\"GlobalFinSec\" product:\"MongoDB\"`."
+      ]
+    },
+    "quiz": [
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What does Shodan primarily index?",
+        "opts": [
+          "Webpage text",
+          "Service Banners",
+          "DNS Records",
+          "Email addresses"
+        ],
+        "correct": 1,
+        "fb": "Shodan indexes service banners from open ports.",
+        "difficulty": "Foundation"
+      }
+    ],
+    "flashcards": [
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      },
+      {
+        "f": "Shodan",
+        "b": "<b>Definition:</b> A search engine for internet-connected devices.<br><b>Enterprise Example:</b> Finding exposed webcams or databases.<br><b>Interview Tip:</b> Emphasize that it searches banners, not web content."
+      }
+    ],
+    "meta": {
+      "version": "2.0",
+      "estimatedTime": "45 min",
+      "difficulty": "Intermediate",
+      "prerequisites": [
+        "Module 01 - Intro to Ethical Hacking"
+      ],
+      "lastReviewed": "2026-07-21"
+    },
+    "objectives": [
+      "Master the fundamental concepts.",
+      "Apply tools in an enterprise context.",
+      "Validate knowledge through practical assessment."
+    ],
+    "pitfalls": [
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Relying solely on automated tools",
+        "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+        "fix": "Always manually verify the output of automated scanners against raw data."
+      },
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Violating Rules of Engagement (ROE)",
+        "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+        "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+      }
+    ],
+    "summary": [
+      "Reconnaissance is the foundation of all successful engagements.",
+      "Passive OSINT provides stealthy insights without triggering alerts.",
+      "Always cross-reference multiple data sources to eliminate false positives.",
+      "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+    ],
+    "ctf": {
+      "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+      "hint": "Look for Base64 encoded strings in the configuration block.",
+      "flag": "CEH{r3c0n_m4st3r}",
+      "points": 200
+    }
+  },
+  {
+    "id": "social-media-recon",
+    "module": "Module 02 - Footprinting & Reconnaissance",
+    "title": "Social Media Footprinting",
+    "sub": "Extracting intelligence from employee social profiles.",
+    "killchain": {
+      "phase": "Reconnaissance",
+      "mitre": "TA0043"
+    },
+    "learn": {
+      "simple": "<b>Definition:</b> Social Media Intelligence (SOCMINT) is the collection and analysis of information from social media platforms to profile targets, map organizational structures, and identify security awareness gaps.<br><br><b>Simple Explanation:</b> It's like looking at someone's Facebook or LinkedIn to figure out where they work, who their boss is, and what technologies they use, which can then be used to trick them.",
+      "analogy": "If a company is a locked building, social media is the employees standing outside chatting loudly about the building's security codes.",
+      "why": "<b>Why This Exists:</b> To understand the human element of the target organization and identify vectors for social engineering.<br><br><b>Business Impact:</b> Employees inadvertently posting photos of ID badges, whiteboard passwords, or complaining about specific software versions provides attackers with exact vectors for compromise.<br><br><b>Career Confidence:</b> Social engineering is highly successful. SOCMINT provides the pretext needed for those attacks.<br><i>Roles:</i> Insider Threat Analyst, Social Engineering Expert, Penetration Tester<br><i>Interview:</i> How can LinkedIn be used maliciously by an attacker?",
+      "architecture": "1. Identify key employees.<br>2. Enumerate social profiles (LinkedIn, Twitter, Reddit).<br>3. Extract organizational structure and technology stacks.<br>4. Develop social engineering pretexts."
+    },
+    "diagram": {
+      "title": "Architecture & Flow",
+      "steps": [
+        {
+          "icon": "\ud83d\udc65",
+          "label": "Identify Key Personnel",
+          "desc": "Locate executives, IT admins, and new hires."
+        },
+        {
+          "icon": "\ud83d\udcf1",
+          "label": "Enumerate Profiles",
+          "desc": "Search LinkedIn, Twitter, and other platforms."
+        },
+        {
+          "icon": "\ud83c\udfe2",
+          "label": "Extract Tech Stack",
+          "desc": "Note any software or hardware mentioned in job descriptions."
+        },
+        {
+          "icon": "\ud83c\udfa3",
+          "label": "Craft Phish",
+          "desc": "Create highly targeted spear-phishing emails based on interests."
+        }
+      ]
+    },
+    "enterprise": {
+      "role": "Insider Threat Analyst | Security Operations",
+      "situation": "<b>Organization Context:</b><br>CEO &rarr; CISO &rarr; Insider Threat Team Lead &rarr; You<br><br><b>Business Context:</b><br>A new IT Administrator was recently hired. You have been tasked with conducting an Open Source background sweep to ensure they are not exposing sensitive GFS architecture details online.",
+      "challenge": "<b>Mission Brief:</b><br>Review the social media footprint of the new IT Admin for OPSEC violations.<br><br><b>Objectives:</b><br>- Review LinkedIn for excessive technology disclosure.<br>- Review Twitter for complaints about internal security policies.<br><br><b>Expected Deliverables:</b><br>An OPSEC risk report detailing what the employee is exposing.",
+      "outcome": "The security controls were verified successfully, preventing potential data leaks.",
+      "lesson": "Always validate external exposure before adversaries do."
+    },
+    "commands": {
+      "win": [],
+      "lin": []
+    },
+    "lab": {
+      "title": "OPSEC Violation Sweep",
+      "difficulty": "Beginner",
+      "duration": "20",
+      "platform": "Kali / Win",
+      "scenario": "<b>Mission Brief:</b><br>Check if our new hires are exposing our tech stack.<br><br><b>Objectives:</b><br>Find the LinkedIn profile of the new IT Admin and identify the firewall vendor they listed.<br><br><b>Evidence Required:</b><br>Screenshot of the exposed firewall vendor on the profile.<br><br><i>Execute the terminal steps below.</i><br><br><b>Deliverables:</b><br>The name of the firewall vendor being used internally.<br><br><b>Manager Feedback:</b><br>Good catch. We will have a conversation with them about OPSEC.",
+      "steps": [
+        "<strong>Objectives:</strong> Find exposed tech stack details.",
+        "<strong>Enterprise Workspace:</strong> Open the Web Browser.",
+        "Navigate to LinkedIn.",
+        "Search for the IT Admin's profile and review their 'Experience' section."
+      ]
+    },
+    "quiz": [
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      },
+      {
+        "q": "What is a common OPSEC violation on LinkedIn?",
+        "opts": [
+          "Listing job title",
+          "Endorsing a colleague",
+          "Listing exact software versions managed",
+          "Having a profile picture"
+        ],
+        "correct": 2,
+        "fb": "Listing exact software versions provides attackers with target info.",
+        "difficulty": "Foundation"
+      }
+    ],
+    "flashcards": [
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      },
+      {
+        "f": "SOCMINT",
+        "b": "<b>Definition:</b> Social Media Intelligence.<br><b>Enterprise Example:</b> Finding employee badge photos on Instagram.<br><b>Interview Tip:</b> It is primarily used to build pretexts for social engineering."
+      }
+    ],
+    "meta": {
+      "version": "2.0",
+      "estimatedTime": "45 min",
+      "difficulty": "Intermediate",
+      "prerequisites": [
+        "Module 01 - Intro to Ethical Hacking"
+      ],
+      "lastReviewed": "2026-07-21"
+    },
+    "objectives": [
+      "Master the fundamental concepts.",
+      "Apply tools in an enterprise context.",
+      "Validate knowledge through practical assessment."
+    ],
+    "pitfalls": [
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Relying solely on automated tools",
+        "desc": "Automated tools often miss nuanced misconfigurations that a manual review would catch.",
+        "fix": "Always manually verify the output of automated scanners against raw data."
+      },
+      {
+        "icon": "\u26a0\ufe0f",
+        "title": "Violating Rules of Engagement (ROE)",
+        "desc": "Active footprinting outside the defined scope can lead to legal consequences.",
+        "fix": "Double-check IP ranges and target domains against the signed ROE document before executing any active probe."
+      }
+    ],
+    "summary": [
+      "Reconnaissance is the foundation of all successful engagements.",
+      "Passive OSINT provides stealthy insights without triggering alerts.",
+      "Always cross-reference multiple data sources to eliminate false positives.",
+      "Map findings to the MITRE ATT&CK framework for enterprise reporting."
+    ],
+    "ctf": {
+      "scenario": "An exposed backup file was found on the target web server during recon. Analyze the file to extract the hidden flag.",
+      "hint": "Look for Base64 encoded strings in the configuration block.",
+      "flag": "CEH{r3c0n_m4st3r}",
+      "points": 200
+    }
+  }
+]
